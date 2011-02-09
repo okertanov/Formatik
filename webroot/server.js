@@ -10,7 +10,7 @@ var sys  = require('sys'),
     fs   = require('fs');
 
 //const WEBROOT       = '/cygdrive/c/okertanov/projects/_unsupported_/NataForms/node.js/webroot/';
-const WEBROOT       = '/home/okertanov/projects/Formatik/webroot/';
+const WEBROOT       = '/home/okertanov/projects/Formatik.svn/webroot/';
 const WEBPORT       = 8800;
 const INDEXHTML     = 'index.html';
 
