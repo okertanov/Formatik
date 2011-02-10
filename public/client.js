@@ -4,26 +4,35 @@
 */
 
 Ext.ns('Formatik','Formatik.views','Formatik.cache','Formatik.stores');
-Ext.setup({
-	icon: 'icon_lg.png',
-	tabletStartupScreen: 'echo10_tablet_startup.png',
-	phoneStartupScreen: 'echo10_phone_startup.png',
-	glossOnIcon: true,
-	statusBarStyle: 'black',
-	onReady: function() {
-		var app = new Formatik.App();
-	}
+Ext.setup(
+{
+    icon: 'icon_lg.png',
+    tabletStartupScreen: 'echo10_tablet_startup.png',
+    phoneStartupScreen: 'echo10_phone_startup.png',
+    glossOnIcon: true,
+    statusBarStyle: 'black',
+    onReady: function() {
+        var app = new Formatik.App();
+    }
 });
 
 
-Ext.regModel('Tasks', {
+Ext.regModel('Operator', 
+{
+    fields: ['id', 'username', 'password', 'address']
+});
+
+Ext.regModel('Tasks', 
+{
     fields: ['id', 'tdate', 'direction']
 });
 
-Formatik.views.Tasks = Ext.extend(Ext.List, {
+Formatik.views.Tasks = Ext.extend(Ext.List, 
+{
     id: 'tasks_list',
     title: 'Заявки',
     iconCls: 'bookmarks',
+    badgeText: '4',
     scroll: 'vertical',
     layout: 'card',
     itemSelector: '.tasks-list-item',
@@ -32,10 +41,13 @@ Formatik.views.Tasks = Ext.extend(Ext.List, {
     html: 'Загружается...',
     itemTpl : '<tpl for="."><div class="tasks-list-item" id="{id}"><h4 class="tdate">{tdate}</h4><h3 class="direction">{direction}</h3></div></tpl>', 
     
-    initComponent: function() {
-        this.store = new Ext.data.Store({
+    initComponent: function() 
+    {
+        this.store = new Ext.data.Store(
+        {
             model: 'Tasks',
-            getGroupString: function(record) {
+            getGroupString: function(record) 
+            {
                 return record.get('tdate');
             },
             data: 
@@ -51,15 +63,17 @@ Formatik.views.Tasks = Ext.extend(Ext.List, {
     }  
 });
 
-Formatik.views.NewTask = Ext.extend(Ext.Panel, {
-	title: 'Новая заявка',
-	iconCls: 'favorites',
-	fullscreen: true,
+Formatik.views.NewTask = Ext.extend(Ext.Panel, 
+{
+    title: 'Новая заявка',
+    iconCls: 'favorites',
+    fullscreen: true,
     items: 
     [{
         title: 'NewTask',
         xtype: 'form',
         id: 'new_task_form',
+        url: '/api/newtask',
         scroll: 'vertical',
         items: 
         [
@@ -86,7 +100,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel, {
                                 value: '1'
                             },
                             {
-                                text: 'Sankt-Pēterburga',
+                                text: 'Sankt-Peterburga',
                                 value: '2'
                             },
                             {
@@ -94,7 +108,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel, {
                                 value: '3'
                             },
                             {
-                                text: 'Viļņa, Tallinna',
+                                text: 'Vilna, Tallinna',
                                 value: '4'
                             },
                             {
@@ -122,23 +136,23 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel, {
                                 value: '10'
                             },
                             {
-                                text: 'Kazahstāna',
+                                text: 'Kazahstana',
                                 value: '11'
                             },
                             {
-                                text: 'Ašhabada',
+                                text: 'Ashabada',
                                 value: '12'
                             },
                             {
-                                text: 'Biškeka',
+                                text: 'Biskeka',
                                 value: '13'
                             },
                             {
-                                text: 'Dušanbe',
+                                text: 'Dusanbe',
                                 value: '14'
                             },
                             {
-                                text: 'Taškenta',
+                                text: 'Taskenta',
                                 value: '15'
                             },
                             {
@@ -192,7 +206,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel, {
                         options: 
                         [
                             {
-                                text: 'Vismaz nekā 200 g',
+                                text: 'Vismaz neka 200 g',
                                 value: '1'
                             },
                             {
@@ -212,7 +226,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel, {
                                 value: '5'
                             },
                             {
-                                text: 'Vairāk 2 kg',
+                                text: 'Vairak 2 kg',
                                 value: '6'
                             }
                         ]
@@ -241,23 +255,63 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel, {
                         readOnly: true,
                     }
                 ]
+            },
+            {
+                xtype: 'fieldset',
+                title: 'Оформление заказа',
+                instructions: 'Введите информацию об оформленном заказе.',
+                defaults: 
+                {
+                    labelWidth: '25%'
+                },
+                items: 
+                [
+                    {
+                        xtype: 'textfield',
+                        name: 'waybill',
+                        label: 'Номер накладной',
+                        placeHolder: 'Номер транспортной накладной',
+                        useClearIcon: true
+                    }
+                ]
+            },
+            {
+                layout: 'hbox',
+                defaults: {xtype: 'button', style: 'margin-right: .5em;'},
+                items: 
+                [
+                    {xtype: 'spacer'},
+                    {
+                        text: 'Добавить',
+                        scope: this,
+                        iconMask: true,
+                        iconCls: 'add', 
+                        ui: 'action',
+                        handler: function()
+                        {
+                            Ext.getCmp('new_task_form').submit({waitMsg : {message:'Submitting'}});
+                        }
+                    }
+                ]
             }
         ]
     }],
-	initComponent: function() {
-		Formatik.views.NewTask.superclass.initComponent.call(this);
-	}		
+    initComponent: function() {
+        Formatik.views.NewTask.superclass.initComponent.call(this);
+    }       
 });
 
-Formatik.views.Settings= Ext.extend(Ext.Panel, {
-	title: 'Настройки',
-	iconCls: 'settings',
-	fullscreen: true,
+Formatik.views.Settings= Ext.extend(Ext.Panel, 
+{
+    title: 'Настройки',
+    iconCls: 'settings',
+    fullscreen: true,
     items: 
     [{
         title: 'Auth',
         xtype: 'form',
         id: 'settings_form',
+        url: '/api/settings',
         scroll: 'vertical',
         items: 
         [
@@ -276,7 +330,7 @@ Formatik.views.Settings= Ext.extend(Ext.Panel, {
                         name: 'username',
                         label: 'Имя пользователя',
                         placeHolder: 'Ваше имя в системе',
-                        autoCapitalize : true,
+                        autoCapitalize : false,
                         useClearIcon: true
                     },
                     {
@@ -286,52 +340,91 @@ Formatik.views.Settings= Ext.extend(Ext.Panel, {
                         placeHolder: 'Ваш пароль',
                         autoCapitalize : false,
                         useClearIcon: true
+                    },
+                    {
+                        xtype: 'textareafield',
+                        name: 'address',
+                        label: 'Адрес',
+                        placeHolder: 'Ваш адрес',
+                        autoCapitalize : true,
+                        useClearIcon: true
                     }
                 ]
+            }, 
+            {
+                layout: 'hbox',
+                defaults: {xtype: 'button', style: 'margin-right: .5em;'},
+                items: 
+                [
+                    {xtype: 'spacer'},
+                    {
+                        text: 'Очистить',
+                        scope: this,
+                        iconMask: true,
+                        iconCls: 'delete',
+                        ui: '', 
+                        handler: function()
+                        {
+                            Ext.getCmp('settings_form').reset();
+                        }
+                    }, 
+                    {
+                        text: 'Применить',
+                        scope: this,
+                        iconMask: true,
+                        iconCls: 'compose', 
+                        ui: 'action',
+                        handler: function()
+                        {
+                            Ext.getCmp('settings_form').submit({waitMsg : {message:'Submitting'}});
+                        }
+                    }
+                ]
+
             }
         ]
     }],
-	initComponent: function() {
-		Formatik.views.Settings.superclass.initComponent.call(this);
-	}		
+    initComponent: function() {
+        Formatik.views.Settings.superclass.initComponent.call(this);
+    }       
 });
 
 Formatik.views.Help = Ext.extend(Ext.Panel, {
-	title: 'Помощь',
-	iconCls: 'info',
-	fullscreen: true,
+    title: 'Помощь',
+    iconCls: 'info',
+    fullscreen: true,
     html: '<center>' + 
                 '<h3 style="color:black;">' +
-                    '<br />"Pasta un kujeru serviss" centrālais birojs<br /><br />' + 
-                    'Adrese: Akadēmijas laukums, 1-141, Rīga, Latvija LV 1050<br />' +
-                    'Tālrunis/fakss: <a>(+371) 67320148</a>, <a>(+371) 67509742</a><br />' +
+                    '<br />"Pasta un kujeru serviss" centralais birojs<br /><br />' + 
+                    'Adrese: Akademijas laukums, 1-141, Riga, Latvija LV 1050<br />' +
+                    'Talrunis/fakss: <a>(+371) 67320148</a>, <a>(+371) 67509742</a><br />' +
                     'e-pasts: ' +
                         '<a href="mailto:pastamedia@gmail.com">pastamedia@gmail.com</a><br /><br />' +
                     '<a href="http://www.pks.lv/">www.pks.lv</a>' +
                 '</h3>' +
                 '<h4 style="color:black;">' + 
-                    '<br /><hr width="80%"/><br /><br />Created by Oleg E Kertanov &copy; 2011 &nbsp; ' + 
-                    '<a href="mailto:okertanov@gmail.com">okertanov@gmail.com</a>' +
+                    '<br /><br /><hr width="70%"/><br /><br />Created by Oleg E Kertanov <a href="mailto:okertanov@gmail.com">&lt;okertanov@gmail.com&gt;</a> &nbsp;' + 
+                    '&copy; 2011 &nbsp;' + 
                 '</h4>' +
           '</center>',
-	initComponent: function() {
-		Formatik.views.Help.superclass.initComponent.call(this);
-	}		
+    initComponent: function() {
+        Formatik.views.Help.superclass.initComponent.call(this);
+    }       
 });
 
 Formatik.App = Ext.extend(Ext.Panel, {
-	cls: 'app',
-	fullscreen: true,
-	layout: 'card',
-	activeItem: 0,
-	initComponent: function() {
+    cls: 'app',
+    fullscreen: true,
+    layout: 'card',
+    activeItem: 0,
+    initComponent: function() {
 
-		this.newtask  = new Formatik.views.NewTask();
-		this.tasks    = new Formatik.views.Tasks();
-		this.settings = new Formatik.views.Settings();
+        this.newtask  = new Formatik.views.NewTask();
+        this.tasks    = new Formatik.views.Tasks();
+        this.settings = new Formatik.views.Settings();
         this.help     = new Formatik.views.Help();
 
-		this.toolbar = new Ext.Toolbar({
+        this.toolbar = new Ext.Toolbar({
             title: 'Новая заявка',
             dock: 'top',
             items: [
@@ -345,7 +438,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
                 }*/
             ]
         });
-		
+        
         this.tabs = new Ext.TabPanel({
             tabBar: { dock: 'bottom', layout: { pack: 'center'} },
             ui: 'dark',
@@ -353,47 +446,47 @@ Formatik.App = Ext.extend(Ext.Panel, {
             items: [this.newtask, this.tasks, this.settings, this.help]
         });
 
-		this.dockedItems = [this.toolbar];
-		this.items = [this.tabs];
-		
-		Formatik.App.superclass.initComponent.call(this);
+        this.dockedItems = [this.toolbar];
+        this.items = [this.tabs];
+        
+        Formatik.App.superclass.initComponent.call(this);
 
         this.on({
-			beforeactivate: this.onBeforeActivate,
-			beforedeactivate: this.onBeforeDeactivate,
-			scope: this
-		});
+            beforeactivate: this.onBeforeActivate,
+            beforedeactivate: this.onBeforeDeactivate,
+            scope: this
+        });
 
-		var tabBar = this.tabs.getTabBar();
+        var tabBar = this.tabs.getTabBar();
         tabBar.on('change', this.onTabChange, this);
-	},
-	
-	afterRender: function() {
+    },
+    
+    afterRender: function() {
       Formatik.App.superclass.afterRender.apply(this, arguments);
       Ext.getBody().on(Ext.isChrome ? 'click' : 'tap', this.onLinkTap, this, {delegate: 'a.test'});
   },
 
-	onLinkTap: function(e, t) {        
+    onLinkTap: function(e, t) {        
       e.stopEvent();
-	
-			this.backButton.hide();		
-			this.setCard(this.tabs, Formatik.defaultAnim);
-			this.tabs.setCard(this.maps, Formatik.defaultAnim);
-			this.updateToolbarTitle(this.tabs.getActiveItem().title);
+    
+            this.backButton.hide();     
+            this.setCard(this.tabs, Formatik.defaultAnim);
+            this.tabs.setCard(this.maps, Formatik.defaultAnim);
+            this.updateToolbarTitle(this.tabs.getActiveItem().title);
   },
 
-	updateToolbarTitle: function(title) {
-			if (title) { this.toolbarTitle = title; } 
-			this.toolbar.setTitle(this.toolbarTitle || ' ');
-	},
-	
-	onTabChange: function(tabs, tab, card) {
+    updateToolbarTitle: function(title) {
+            if (title) { this.toolbarTitle = title; } 
+            this.toolbar.setTitle(this.toolbarTitle || ' ');
+    },
+    
+    onTabChange: function(tabs, tab, card) {
       this.updateToolbarTitle(this.tabs.getActiveItem().title);
   },
-	
-	onBeforeActivate: function() {
+    
+    onBeforeActivate: function() {
       this.tabs.items.each(function(card) {
-      	if (card.scroller) { card.scroller.scrollTo({x: 0, y: 0}, false); }
+        if (card.scroller) { card.scroller.scrollTo({x: 0, y: 0}, false); }
       });
   },
     

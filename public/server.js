@@ -9,7 +9,7 @@ var sys  = require('sys'),
     path = require('path'),
     fs   = require('fs');
 
-const WEBROOT       = '/cygdrive/c/okertanov/projects/_unsupported_/Formatik.svn/webroot/';
+const WEBROOT       = '/cygdrive/c/okertanov/projects/_unsupported_/Formatik.svn/public/';
 //const WEBROOT       = '/home/okertanov/projects/Formatik.svn/webroot/';
 const WEBPORT       = 8800;
 const INDEXHTML     = 'index.html';
