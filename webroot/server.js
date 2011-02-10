@@ -9,8 +9,8 @@ var sys  = require('sys'),
     path = require('path'),
     fs   = require('fs');
 
-//const WEBROOT       = '/cygdrive/c/okertanov/projects/_unsupported_/NataForms/node.js/webroot/';
-const WEBROOT       = '/home/okertanov/projects/Formatik.svn/webroot/';
+const WEBROOT       = '/cygdrive/c/okertanov/projects/_unsupported_/Formatik.svn/webroot/';
+//const WEBROOT       = '/home/okertanov/projects/Formatik.svn/webroot/';
 const WEBPORT       = 8800;
 const INDEXHTML     = 'index.html';
 
@@ -88,7 +88,8 @@ var HTTPMimeTypes =
     'text': 'text/plain',
     'html': 'text/html',
     'css' : 'text/css',
-    'js'  : 'application/javascript'
+    'js'  : 'application/javascript', 
+    'ico' : 'image/x-icon'
 };
 
 function get_mime_for(filename)
@@ -109,6 +110,9 @@ function get_mime_for(filename)
             break;
         case 'txt':
             mime = HTTPMimeTypes['text'];
+            break;
+        case 'ico':
+            mime = HTTPMimeTypes['ico'];
             break;
         default:
             mime = HTTPMimeTypes['text'];
