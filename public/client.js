@@ -64,7 +64,7 @@ Formatik.views.Tasks = Ext.extend(Ext.List,
 
 Formatik.views.NewTask = Ext.extend(Ext.Panel, 
 {
-    title: 'Новая заявка',
+    title: 'Оформление заказа',
     iconCls: 'favorites',
     fullscreen: true,
     items: 
@@ -78,7 +78,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
         [
             {
                 xtype: 'fieldset',
-                title: 'Введите информацию о новой заявке',
+                title: 'Введите соответствующую информацию',
                 instructions: 'Внимательно вводите информацию со слов заказчика.',
                 defaults: 
                 {
@@ -167,33 +167,37 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         options: 
                         [
                             {
-                                text: 'Товар',
+                                text: 'Документы',
                                 value: '1'
                             },
                             {
-                                text: 'Документ',
+                                text: 'Товар',
                                 value: '2'
-                            },
-                            {
-                                text: 'Послылка',
-                                value: '3'
-                            },
+                            }
                         ]
                     },
                     {
                         xtype: 'selectfield',
                         name: 'type',
-                        label: 'Тип доставки',
+                        label: 'Категория отправления',
                         placeHolder: 'Тип доставки отправления',
                         options: 
                         [
                             {
-                                text: 'Бизнес тариф',
+                                text: 'Biznesa klase',
                                 value: '1'
                             },
                             {
-                                text: 'Срочный бизнес тариф',
+                                text: 'OFF TIME',
                                 value: '2'
+                            },
+                            {
+                                text: 'Stingri uz rokas',
+                                value: '4'
+                            },
+                            {
+                                text: 'Ekspress',
+                                value: '4'
                             }
                         ]
                     },
@@ -205,7 +209,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         options: 
                         [
                             {
-                                text: 'Vismaz neka 200 g',
+                                text: 'Lidz 200 g',
                                 value: '1'
                             },
                             {
@@ -229,6 +233,13 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                                 value: '6'
                             }
                         ]
+                    },
+                    {
+                        xtype: 'textfield',
+                        name: 'numplaces',
+                        label: 'Количество мест',
+                        placeHolder: '1 место - 750 х 550 х 500 mm, вес 31,5 kg',
+                        useClearIcon: true
                     }
                 ]
             },
@@ -271,6 +282,19 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         label: 'Номер накладной',
                         placeHolder: 'Номер транспортной накладной',
                         useClearIcon: true
+                    },
+                    {
+                        /**/
+                        xtype: 'textfield',
+                        name: 'datetimereceived',
+                        label: 'Дата и время оформления',
+                        placeHolder: 'DD.MM.YY HH:MM',
+                        centered: true,
+                        disabled: true,
+                        disabledCls: 'x-field',
+                        useClearIcon: false,
+                        readOnly: true,
+                        /**/
                     }
                 ]
             },
@@ -431,7 +455,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
         this.help     = new Formatik.views.Help();
 
         this.toolbar = new Ext.Toolbar({
-            title: 'Новая заявка',
+            title: 'Оформление заказа',
             dock: 'top',
             items: [
                 {xtype: 'spacer'}, 
