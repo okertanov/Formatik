@@ -102,8 +102,12 @@ function serve_request_api(request, response)
                 response_http_code(request, response, 200);
                 break;
             case 'newtask':
+                response_http_code(request, response, 200);
                 break;
             case 'settings':
+                response.writeHead(200, {"Content-Type": HTTPMimeTypes['json']});
+                response.write('{ "success":true, "msg":"Authenticated" }' + '\n');
+                response.end();
                 break;
             case 'auth':
                 response_http_code(request, response, 401);

@@ -16,12 +16,7 @@ Ext.setup(
     }
 });
 
-Ext.regModel('Operator', 
-{
-    fields: ['id', 'username', 'password', 'address']
-});
-
-Ext.regModel('Tasks', 
+Ext.regModel('Task', 
 {
     fields: ['id', 'tdate', 'direction']
 });
@@ -31,7 +26,7 @@ Formatik.views.Tasks = Ext.extend(Ext.List,
     id: 'tasks_list',
     title: 'Заявки',
     iconCls: 'bookmarks',
-    badgeText: '4',
+    badgeText: '0',
     scroll: 'vertical',
     layout: 'card',
     itemSelector: '.tasks-list-item',
@@ -44,7 +39,7 @@ Formatik.views.Tasks = Ext.extend(Ext.List,
     {
         this.store = new Ext.data.Store(
         {
-            model: 'Tasks',
+            model: 'Task',
             getGroupString: function(record) 
             {
                 return record.get('tdate');
@@ -324,6 +319,11 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
     }       
 });
 
+Ext.regModel('Operator', 
+{
+    fields: ['id', 'username', 'password', 'address']
+});
+
 Formatik.views.Settings= Ext.extend(Ext.Panel, 
 {
     title: 'Настройки',
@@ -389,6 +389,7 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         handler: function()
                         {
                             Ext.getCmp('settings_form').reset();
+                            ResetLocalAuthConfig();
                         }
                     }, 
                     {
@@ -399,14 +400,25 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         ui: 'action',
                         handler: function()
                         {
+                            //0. Obtain model
+                            Ext.getCmp('settings_form').updateRecord(Ext.getCmp('settings_form').operator); //this stands "Ext.getCmp('settings_form')"
+                            console.dir(Ext.getCmp('settings_form').operator);
+
                             //1. Post
-                            Ext.getCmp('settings_form').submit({waitMsg : {message:'Submitting'}});
-
-                            //2. Wait for xhr reply on the auth request
-
-                            //3. Set Cookie
-
-                            //4. Set username on panel if succeeded otherwise raise an error with alert
+                            Ext.getCmp('settings_form').submit({ 
+                                            waitMsg: {message:'Submitting', cls : 'demos-loading'},
+                                            //2. Wait for xhr reply on the auth request
+                                            success: function(f, result) {
+                                                console.dir(result);
+                                                //3. Set Cookie
+                                                SetLocalAuthConfig(this.operator.data['username'], this.operator.data['password']);
+                                                //4. Set username on panel if succeeded otherwise raise an error with alert
+                                            },
+                                            failure: function(f, result) {
+                                                console.dir(result);
+                                                Ext.Msg.alert('Error', result.responseText, Ext.emptyFn);
+                                            }
+                                        });
                         }
                     }
                 ]
@@ -416,6 +428,14 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
     }],
     initComponent: function() {
         Formatik.views.Settings.superclass.initComponent.call(this);
+
+        var auth = GetLocalAuthConfig();
+        Ext.getCmp('settings_form').operator = Ext.ModelMgr.create({
+                username: auth.username,
+                password: auth.password,
+                address: ''
+            }, 'Operator');
+        Ext.getCmp('settings_form').load(this.operator);
     }       
 });
 
@@ -447,7 +467,9 @@ Formatik.App = Ext.extend(Ext.Panel, {
     fullscreen: true,
     layout: 'card',
     activeItem: 0,
+
     initComponent: function() {
+        console.log('initComponent');
 
         this.newtask  = new Formatik.views.NewTask();
         this.tasks    = new Formatik.views.Tasks();
@@ -455,17 +477,17 @@ Formatik.App = Ext.extend(Ext.Panel, {
         this.help     = new Formatik.views.Help();
 
         this.toolbar = new Ext.Toolbar({
-            title: 'Оформление заказа',
+            /*title: 'Оформление заказа',*/
             dock: 'top',
             items: [
                 {xtype: 'spacer'}, 
-                /*{
+                {
                     xtype: 'selectfield',
                     name: 'operator',
                     options: [
-                        {text: 'Operator 1',  value: '1'},
+                        {text: '',  value: '0'},
                     ]
-                }*/
+                }
             ]
         });
         
@@ -489,44 +511,73 @@ Formatik.App = Ext.extend(Ext.Panel, {
 
         var tabBar = this.tabs.getTabBar();
         tabBar.on('change', this.onTabChange, this);
-    },
+
+        this.newtask_tab = this.tabs.items.items[0].tab;
+        this.tasks_tab = this.tabs.items.items[1].tab;
+        this.settings_tab = this.tabs.items.items[2].tab;
+        this.help_tab = this.tabs.items.items[3].tab;
+
+        /*Finalize UI*/
+        this.baseUIOnAuthConfig( IsLocalAuthConfig(GetLocalAuthConfig()) );
+  },
     
-    afterRender: function() {
+  afterRender: function() {
+      console.log('afterRender');
       Formatik.App.superclass.afterRender.apply(this, arguments);
-      Ext.getBody().on(Ext.isChrome ? 'click' : 'tap', this.onLinkTap, this, {delegate: 'a.test'});
+      //Ext.getBody().on(Ext.isChrome ? 'click' : 'tap', this.onLinkTap, this, {delegate: 'a.test'});
   },
 
-    onLinkTap: function(e, t) {        
+  onLinkTap: function(e, t) {
       e.stopEvent();
-    
-            this.backButton.hide();     
-            this.setCard(this.tabs, Formatik.defaultAnim);
-            this.tabs.setCard(this.maps, Formatik.defaultAnim);
-            this.updateToolbarTitle(this.tabs.getActiveItem().title);
+      this.backButton.hide();     
+      this.setCard(this.tabs, Formatik.defaultAnim);
+      this.tabs.setCard(this.maps, Formatik.defaultAnim);
+      this.updateToolbarTitle(this.tabs.getActiveItem().title);
   },
 
-    updateToolbarTitle: function(title) {
+  updateToolbarTitle: function(title) {
             if (title) { this.toolbarTitle = title; } 
             this.toolbar.setTitle(this.toolbarTitle || ' ');
-    },
+  },
     
-    onTabChange: function(tabs, tab, card) {
+  onTabChange: function(tabs, tab, card) {
+      console.log('onTabChange');
       this.updateToolbarTitle(this.tabs.getActiveItem().title);
   },
     
-    onBeforeActivate: function() {
+  onBeforeActivate: function() {
+      console.log('onBeforeActivate');
       this.tabs.items.each(function(card) {
         if (card.scroller) { card.scroller.scrollTo({x: 0, y: 0}, false); }
       });
   },
     
-    onBeforeDeactivate: function() { },
+  onBeforeDeactivate: function() {
+      console.log('onBeforeDeactivate');
+  },
 
+    baseUIOnAuthConfig: function(act) {
+        var isEnabled = !!act;
+        if(act)  
+        {
+            this.newtask_tab.enable().setVisible(true);
+            this.tasks_tab.enable().setVisible(true).setBadge();
+            this.tabs.setActiveItem(this.newtask);
+        }
+        else
+        {
+            this.newtask_tab.disable().setVisible(false);
+            this.tasks_tab.disable().setVisible(false).setBadge();
+            this.tabs.setActiveItem(this.settings);
+        }
+        this.updateToolbarTitle(this.tabs.getActiveItem().title);
+    },
 
 });
 
+
 /**************************************************/
-function createCookie(name,value,days) 
+function CreateCookie(name,value,days) 
 {
     if (days) 
     {
@@ -538,25 +589,56 @@ function createCookie(name,value,days)
     {
         var expires = "";
     }
-    document.cookie = name+"="+value+expires+"; path=/";
+
+    var cookStr = name + "=" + escape(value) + expires + "; path=/";
+    document.cookie = cookStr;
 }
 
-function readCookie(name) 
+function ReadCookie(name) 
 {
+    var value = null;
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
     for(var i=0;i < ca.length;i++) 
     {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        if (c.indexOf(nameEQ) == 0) 
+            value = unescape(c.substring(nameEQ.length,c.length));
     }
-    return null;
+
+    return value;
 }
 
-function eraseCookie(name) 
+function DeleteCookie(name) 
 {
-    createCookie(name,"",-1);
+    CreateCookie(name, "", -1);
 }
+/**************************************************/
 
 /**************************************************/
+function SetLocalAuthConfig(username, password)
+{
+    CreateCookie('auth', username + ':' + password, 365); 
+}
+
+function ResetLocalAuthConfig()
+{
+    DeleteCookie('auth');
+}
+
+function GetLocalAuthConfig()
+{
+    var cookie = ReadCookie('auth');
+    var pair = (cookie ? cookie.split(':') : {});
+    var auth = { username: pair[0] || '', password: pair[1] || '' };
+
+    return auth;
+}
+
+function IsLocalAuthConfig(auth)
+{
+    return (auth.username.length && auth.password.length);
+}
+/**************************************************/
+
