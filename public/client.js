@@ -361,7 +361,8 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         label: 'Имя пользователя',
                         placeHolder: 'Ваше имя в системе',
                         autoCapitalize : false,
-                        useClearIcon: true
+                        useClearIcon: true,
+                        required: true
                     },
                     {
                         xtype: 'passwordfield',
@@ -377,7 +378,8 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         label: 'Адрес',
                         placeHolder: 'Ваш адрес',
                         autoCapitalize : true,
-                        useClearIcon: true
+                        useClearIcon: true,
+                        readOnly: true
                     }
                 ]
             }, 
