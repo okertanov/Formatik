@@ -1,0 +1,246 @@
+--  ---------------------------------------------------------
+--  Formatik Server Application.
+--  Copyright (c) 2011 Oleg Kertanov <okertanov@gmail.com>
+--  ---------------------------------------------------------
+
+--  MySQL Database script for the Formatik project.
+
+--  ---------------------------------------------------------
+--  The structure of the database
+--  ---------------------------------------------------------
+
+-- 
+--  Cleanup 
+-- 
+drop database if exists `formatikdb`;
+
+-- 
+--  Database: formatikdb 
+-- 
+create database if not exists `formatikdb` 
+    default character set = utf8
+    default collate = utf8_general_ci;
+
+use formatikdb;
+
+-- 
+--  User: formatik@localhost 
+-- 
+drop user `formatik`@`localhost`;
+
+create user `formatik`@`localhost` 
+    identified by '9sTrTBBnnMO';
+
+grant all privileges on formatikdb.* to `formatik`@`localhost`
+    with grant option;
+
+-- 
+--  Table: operator 
+-- 
+create table if not exists `operator`
+    (
+        `id` int not null primary key auto_increment,
+        `username`      varchar(64)  unique not null default '',
+        `password`      varchar(64)  not null default '',
+        `address`       varchar(512) not null default '',
+        `isadmin`       bool    not null default false,
+        `description`   varchar(512) not null default '',
+        index(`username`),
+        index(`isadmin`)
+    )
+    engine InnoDB 
+    comment 'The operator table is used to authenticate the operators.';
+
+-- 
+--  Table: place 
+-- 
+create table if not exists `place`
+    (
+        `id`            int not null primary key auto_increment,
+        `direction_id`  int unique not null default 0,
+        `name`          varchar(256) not null default '',
+        `city`          varchar(256) not null default '',
+        `country`       varchar(256) not null default '',
+        `geo`           varchar(64)  not null default '',
+        `description`   varchar(512) not null default '',
+        index(direction_id)
+    )
+    engine InnoDB
+    comment 'The place table stores cities list.';
+
+-- 
+--  Table: kind 
+-- 
+create table if not exists `kind`
+    (
+        `id`            int not null primary key auto_increment,
+        `kind_id`       int unique not null default 0,
+        `name`          varchar(256) not null default '',
+        `description`   varchar(512) not null default '',
+        index(`kind_id`)
+    )
+    engine InnoDB 
+    comment 'The kind table is a kinda kindly kind.';
+
+-- 
+--  Table: category 
+-- 
+create table if not exists `category`
+    (
+        `id`            int not null primary key auto_increment,
+        `category_id`   int unique not null default 0,
+        `name`          varchar(256) not null default '',
+        `description`   varchar(512) not null default '',
+        index(`category_id`)
+    )
+    engine InnoDB 
+    comment 'The category table stores categories list indeed.';
+
+-- 
+--  Table: package 
+-- 
+create table if not exists `package`
+    (
+        `id`            int not null primary key auto_increment,
+        `package_id`    int unique not null default 0,
+        `name`          varchar(256) not null default '',
+        `description`   varchar(512) not null default '',
+        index(`package_id`)
+    )
+    engine InnoDB 
+    comment 'The package table stores packages information.';
+
+-- 
+--  Table: weightclass 
+-- 
+create table if not exists `weightclass`
+    (
+        `id`             int not null primary key auto_increment,
+        `weightclass_id` int unique not null default 0,
+        `name`           varchar(256) not null default '',
+        `description`    varchar(512) not null default '',
+        index(`weightclass_id`)
+    )
+    engine InnoDB 
+    comment 'The weightclass table stores weightclass classifiers.';
+
+-- 
+--  Table: order 
+-- 
+create table if not exists `order`
+    (
+        `id`               int not null primary key auto_increment,
+        `direction_id`     int not null default 0, 
+        `kind_id`          int not null default 0, 
+        `category_id`      int not null default 0, 
+        `package_id`       int not null default 0, 
+        `weightclass_id`   int not null default 0,  
+        `weight`           decimal(10,3) not null default 0000000.000, 
+        `numplaces`        int not null default 0, 
+        `cost`             decimal(10,2) not null default 00000000.00, 
+        `waybill`          varchar(64) not null default '', 
+        `datetimereceived` varchar(64) not null default '',
+        `datetimestamp`    timestamp default now(),
+        `description`      varchar(512) not null default '',
+        index(`direction_id`),
+        index(`datetimereceived`),
+        index(`datetimestamp`),
+        constraint foreign key(`direction_id`) references `place`(`direction_id`)           
+            on delete restrict on update cascade,
+        constraint foreign key(`kind_id`) references `kind`(`kind_id`)                      
+            on delete restrict on update cascade,
+        constraint foreign key(`category_id`) references `category`(`category_id`)          
+            on delete restrict on update cascade,
+        constraint foreign key(`package_id`) references `package`(`package_id`)             
+            on delete restrict on update cascade,
+        constraint foreign key(`weightclass_id`) references `weightclass`(`weightclass_id`) 
+            on delete restrict on update cascade
+    )
+    engine InnoDB 
+    comment 'The order table is all about the orders.';
+
+--  ---------------------------------------------------------
+--  The initial data for the database
+--  ---------------------------------------------------------
+
+-- 
+--  Data: operator 
+-- 
+insert into `operator` (`username`, `password`, `address`, `isadmin`, `description`) values
+    ('okertanov', MD5('fmQAZ'),     'Riga, Latvia, +37125864676', true, 'The developer of the system.'),
+    ('nata',      MD5('fm1234567'), 'Riga, Latvia, +37127700257', true, 'Main system operator.');
+
+-- 
+--  Data: place 
+-- 
+insert into `place` (`direction_id`, `name`, `city`, `country`, `geo`, `description`) values 
+    (1,  'Maskava', 'Moscow', 'Russia', '55.751667,37.617778', 
+                                        'GMT+3, 845 km from Riga.'), 
+    (2,  'Sankt-Pēterburga', 'Saint Petersburg', 'Russia', '59.95,30.316667', 
+                                        'GMT+3, 500 km from Riga.'), 
+    (3,  'Apgabala centri Krievija', 'Central Russia', 'Russia', '00.0000,00.0000', 
+                                        'The western areas of Russia that lie within Europe.'), 
+    (4,  'Viļņa, Tallinna', 'Vilnius, Tallinn', 'European Union', '54.683333,25.283333', 
+                                        'GMT+2, About 280 km from Riga.'), 
+    (5,  'Apgabala centri Lietuva, Igaunija', 'Lithuania, Estonia', 'European Union', '00.0000,00.0000', 
+                                        'Overall Baltic states, GMT+2, About 300 km from Riga.'), 
+    (6,  'Minska', 'Minsk', 'Belarus', '53.9,27.566667', 
+                                        'GMT+2, 400 km from Riga.'), 
+    (7,  'Apgabala centri Baltkrievija', 'Overall Belarus', 'Belarus', '00.0000,00.0000', 
+                                        'GMT+2, About 400 km from Riga.'), 
+    (8,  'Kijeva', 'Kiev', 'Ukraine', '50.45, 30.523333', 
+                                        'GMT+2, 900 km from Riga.'), 
+    (9,  'Apgabala centri Ukraina', 'Overall Ukraine', 'Ukraine', '00.0000,00.0000', 
+                                        'GMT+2, About 1300 km from Riga.'), 
+    (10, 'Almati', 'Almaty', 'Kazakhstan', '43.2775,76.895833', 
+                                        'UTC+6, Far away from Riga.'), 
+    (11, 'Kazahstāna', 'Almaty', 'Kazakhstan', '00.0000,00.0000', 
+                                        'UTC+6, Far away from Riga.'), 
+    (12, 'Ašhabada', 'Ashgabat', 'Turkmenistan', '37.933333,58.366667', 
+                                        'UTC+5, Far away from Riga.'), 
+    (13, 'Biškeka', 'Bishkek', 'Kyrgyzstan', '42.874722,74.612222', 
+                                        'UTC+6, Far away from Riga.'), 
+    (14, 'Dušanbe', 'Dushanbe', 'Tajikistan', '38.536667,68.78', 
+                                        'UTC+5, Far away from Riga.'), 
+    (15, 'Taškenta', 'Tashkent', 'Uzbekistan', '41.266667,69.216667', 
+                                        'UTC+6, Far away from Riga.'), 
+    (99, 'Citāds', 'Other', 'Nowhere', '00.0000,00.0000', 
+                                        'Unknown or special place to deliver a package.');
+
+-- 
+--  Data: kind 
+-- 
+insert into `kind` (`kind_id`, `name`, `description`) values 
+    (1, 'Документы', 'Вид отправления: Документы (+0 к базовому тарифу)'),
+    (2, 'Личные документы', 'Вид отправления: Личные документы (+10 к базовому тарифу)'),
+    (3, 'Товар', 'Вид отправления: Товар (+10 lvl к базовому тарифу)');
+
+-- 
+--  Data: category 
+-- 
+insert into `category` (`category_id`, `name`, `description`) values 
+    (1, 'Biznesa klasē', '(+0 к базовому тарифу)'),
+    (2, 'OFF TIME', '(*2 к базовому тарифу)'),
+    (3, 'Stingri uz rokas', '(*2 к базовому тарифу)'),
+    (4, 'Ekspress', '(*2 к базовому тарифу)');
+
+-- 
+--  Data: package 
+-- 
+insert into `package` (`package_id`, `name`, `description`) values 
+    (1, 'Письмо',  '(до 270 х 350 мм и  0,3 кг максимум)'),
+    (2, 'Пакет',   '(до 370 х 410 мм и 5 кг максимум)'), 
+    (3, 'Посылка', '(до 750 х 550 x 500 мм и 31.5 кг максимум)');
+
+-- 
+--  Data: weightclass 
+-- 
+insert into `weightclass` (`weightclass_id`, `name`, `description`) values 
+    (1, 'Lidz 200 g', ''),
+    (2, '0,200 g - 0,500 g', ''), 
+    (3, '0,501 g - 1 kg', ''), 
+    (4, '1 kg - 1,5 kg', ''), 
+    (5, '1,501 kg - 2 kg', ''), 
+    (6, 'Vairak 2 kg', '');
+
+

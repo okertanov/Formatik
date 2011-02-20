@@ -16,9 +16,13 @@ Ext.setup(
     }
 });
 
-Ext.regModel('Task', 
+Ext.regModel('Order', 
 {
-    fields: ['id', 'tdate', 'direction']
+    fields: [   
+                'id', 'direction', 'kind', 'category', 'package', 
+                'weightclass', 'weight', 'numplaces', 'cost', 'waybill', 
+                'datetimereceived', 'datetimestamp', 'description'
+            ]
 });
 
 Formatik.views.Tasks = Ext.extend(Ext.List, 
@@ -31,25 +35,25 @@ Formatik.views.Tasks = Ext.extend(Ext.List,
     layout: 'card',
     itemSelector: '.tasks-list-item',
     grouped: true,
-    groups: 'tdate',
+    groups: 'datetimereceived',
     html: 'Загружается...',
-    itemTpl : '<tpl for="."><div class="tasks-list-item" id="{id}"><h4 class="tdate">{tdate}</h4><h3 class="direction">{direction}</h3></div></tpl>', 
+    itemTpl : '<tpl for="."><div class="tasks-list-item" id="{id}"><h4 class="datetimereceived">{datetimereceived}</h4><h3 class="direction">{direction}</h3></div></tpl>', 
     
     initComponent: function() 
     {
         this.store = new Ext.data.Store(
         {
-            model: 'Task',
+            model: 'Order',
             getGroupString: function(record) 
             {
-                return record.get('tdate');
+                return record.get('datetimereceived');
             },
             data: 
             [
-                {id: '1', tdate: '25 Jan 2010', direction: 'To Riga'},
-                {id: '1', tdate: '25 Jan 2010', direction: 'To Kiev'},
-                {id: '1', tdate: '25 Jan 2010', direction: 'NY USA'},
-                {id: '2', tdate: '24 Jan 2010', direction: 'To Moscow'},
+                {id: '1', datetimereceived: '25 Jan 2010', direction: 'To Riga'},
+                {id: '1', datetimereceived: '25 Jan 2010', direction: 'To Kiev'},
+                {id: '1', datetimereceived: '25 Jan 2010', direction: 'NY USA'},
+                {id: '2', datetimereceived: '24 Jan 2010', direction: 'To Moscow'},
             ]
         });
         
@@ -94,7 +98,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                                 value: '1'
                             },
                             {
-                                text: 'Sankt-Peterburga',
+                                text: 'Sankt-Pēterburga',
                                 value: '2'
                             },
                             {
@@ -102,7 +106,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                                 value: '3'
                             },
                             {
-                                text: 'Vilna, Tallinna',
+                                text: 'Viļņa, Tallinna',
                                 value: '4'
                             },
                             {
@@ -130,27 +134,27 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                                 value: '10'
                             },
                             {
-                                text: 'Kazahstana',
+                                text: 'Kazahstāna',
                                 value: '11'
                             },
                             {
-                                text: 'Ashabada',
+                                text: 'Ašhabada',
                                 value: '12'
                             },
                             {
-                                text: 'Biskeka',
+                                text: 'Biškeka',
                                 value: '13'
                             },
                             {
-                                text: 'Dusanbe',
+                                text: 'Dušanbe',
                                 value: '14'
                             },
                             {
-                                text: 'Taskenta',
+                                text: 'Taškenta',
                                 value: '15'
                             },
                             {
-                                text: 'Other',
+                                text: 'Citāds',
                                 value: '99'
                             }
                         ]
@@ -166,20 +170,24 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                                 value: '1'
                             },
                             {
-                                text: 'Товар',
+                                text: 'Личные документы',
                                 value: '2'
+                            },
+                            {
+                                text: 'Товар',
+                                value: '3'
                             }
                         ]
                     },
                     {
                         xtype: 'selectfield',
-                        name: 'type',
+                        name: 'category',
                         label: 'Категория отправления',
                         placeHolder: 'Тип доставки отправления',
                         options: 
                         [
                             {
-                                text: 'Biznesa klase',
+                                text: 'Biznesa klasē',
                                 value: '1'
                             },
                             {
@@ -188,7 +196,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                             },
                             {
                                 text: 'Stingri uz rokas',
-                                value: '4'
+                                value: '3'
                             },
                             {
                                 text: 'Ekspress',
@@ -198,7 +206,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                     },
                     {
                         xtype: 'selectfield',
-                        name: 'weight',
+                        name: 'weightclass',
                         label: 'Вес отправления',
                         placeHolder: 'Вес отправления в кг',
                         options: 
@@ -262,6 +270,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                 ]
             },
             {
+                layout: 'hbox',
                 xtype: 'fieldset',
                 title: 'Оформление заказа',
                 instructions: 'Введите информацию об оформленном заказе.',
@@ -279,7 +288,6 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         useClearIcon: true
                     },
                     {
-                        /**/
                         xtype: 'textfield',
                         name: 'datetimereceived',
                         label: 'Дата и время оформления',
@@ -289,7 +297,6 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         disabledCls: 'x-field',
                         useClearIcon: false,
                         readOnly: true,
-                        /**/
                     }
                 ]
             },
@@ -321,7 +328,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
 
 Ext.regModel('Operator', 
 {
-    fields: ['id', 'username', 'password', 'address']
+    fields: ['id', 'username', 'password', 'address', 'isadmin', 'description']
 });
 
 Formatik.views.Settings= Ext.extend(Ext.Panel, 
