@@ -379,7 +379,9 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         placeHolder: 'Ваш адрес',
                         autoCapitalize : true,
                         useClearIcon: true,
-                        readOnly: true
+                        readOnly: true,
+                        disabled: true,
+                        disabledCls: 'x-field'
                     }
                 ]
             }, 
