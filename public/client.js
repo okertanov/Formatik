@@ -413,8 +413,8 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         {
                             //0. Obtain model  //this stands "Ext.getCmp('settings_form')"
                             var my_form = Ext.getCmp('settings_form');
-                            my_form.updateRecord(my_form.operator);
                             my_form.operator.data['password'] = hex_md5(my_form.operator.data['password']);
+                            my_form.updateRecord(my_form.operator);
                             console.dir(my_form.operator);
 
                             //1. Post
@@ -429,7 +429,8 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                                             },
                                             failure: function(f, result) {
                                                 console.dir(result);
-                                                Ext.Msg.alert('Error', result.responseText, Ext.emptyFn);
+                                                var err_str = result.msg || result.responseText;
+                                                Ext.Msg.alert('Error', err_str, Ext.emptyFn);
                                             }
                             });
                         }
