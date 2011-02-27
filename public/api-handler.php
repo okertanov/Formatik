@@ -5,6 +5,11 @@
 //  ---------------------------------------------------------
 
 //
+// Settings
+//
+ini_set("display_errors", 1);
+
+//
 // Globals
 //
 $ctx = array();
@@ -29,6 +34,35 @@ function handle_ping()
 }
 function handle_auth()
 {
+    global $ctx;
+    $rq = &$ctx['rq'];
+    $rs = &$ctx['rs'];
+    $rs['endpoint'] = $ctx['endpoint'];
+    $rs['success']  = FALSE;
+    $rs['msg']      = 'not authenticated';
+    
+    try
+    {
+        $rs['username'] = $rq['username'] or '';
+        $rs['password'] = $rq['password'] or '';
+
+        if ( !strlen($rs['username']) or !strlen($rs['password']) )
+            throw new Exception('Username or password couldn\'t be empty.');
+
+        $sql_statement = sprintf('call formatikdb_auth("%s", "%s");', $rs['username'], $rs['password']);
+        $sql_result    = sql_execute($sql_statement) or 
+            throw new Exception('sql_execute error: ' . mysql_error());
+        $sql_data      = sql_get_data($sql_result) or 
+            throw new Exception('sql_execute error: ' . mysql_error());
+        sql_release_data($sql_result);
+    }
+    catch(Exception $e)
+    {
+        $rs['success']  = FALSE;
+        $rs['msg']      = 'Exception: ' . $e->getMessage();
+    }
+
+    return json_encode($ctx['rs']);
 }  
 function handle_settings()
 {
@@ -174,12 +208,42 @@ function sql_refresh()
 }
 
 //
-// sql_close: close connection or not, if persistent
+// sql_close: closes connection or not, if persistent
 //
 function sql_close()
 {
     global $ctx;
     mysql_close($ctx['sqlconn']);
+}
+
+//
+// sql_execute: executes an sql command
+//
+function sql_execute($sql)
+{
+    sql_refresh();
+
+    return mysql_query($sql);
+}
+
+//
+//
+//
+function sql_get_data($res)
+{
+    sql_refresh();
+    
+    return mysql_fetch_array($res, MYSQL_ASSOC);
+}
+
+//
+//
+//
+function sql_release_data($res)
+{
+    sql_refresh();
+
+    return mysql_free_result($res);
 }
 
 //

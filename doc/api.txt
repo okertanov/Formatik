@@ -28,6 +28,7 @@ Action php-api-handler-v1 /api-handler.php virtual
     1.3   POST  /api/auth
                             RQ: '{ "username":"", "password":"" }'
                             RS: '{ "endpoint":"/api/auth", "success":true, "msg":"authenticated", "username":"", "password":"" }'
+                            RF: '{ "endpoint":"/api/auth", "success":false, "msg":"not authenticated" }'
 
     1.4   GET   /api/settings
                             RQ: '{}'
