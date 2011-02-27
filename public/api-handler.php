@@ -54,6 +54,11 @@ function handle_auth()
             e_throw( 'sql_execute error: ' . sql_get_error() );
         $sql_data      = sql_get_data($sql_result) or 
             e_throw( 'not authenticated' );
+        if ($sql_data['authenticated'])
+        {
+            $rs['success']  = TRUE;
+            $rs['msg']      = 'authenticated';
+        }
         sql_release_data($sql_result);
     }
     catch(Exception $e)
