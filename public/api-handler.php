@@ -14,6 +14,7 @@ ini_set("display_errors", 1);
 //
 $ctx = array();
 $ctx['sqlhost']         = ':/var/run/mysqld/mysqld.sock' or 'localhost'; 
+$ctx['sqldb']           = 'formatikdb'; 
 $ctx['sqlusername']     = 'formatik';
 $ctx['sqlpassword']     = '9sTrTBBnnMO';
 $ctx['sqlflags']        = 0;
@@ -43,17 +44,17 @@ function handle_auth()
     
     try
     {
-        $rs['username'] = $rq['username'] or '';
-        $rs['password'] = $rq['password'] or '';
+        $rs['username'] = isset($rq['username']) ? $rq['username'] : '';
+        $rs['password'] = isset($rq['password']) ? $rq['password'] : '';
 
         if ( !strlen($rs['username']) or !strlen($rs['password']) )
             throw new Exception('Username or password couldn\'t be empty.');
 
         $sql_statement = sprintf('call formatikdb_auth("%s", "%s");', $rs['username'], $rs['password']);
         $sql_result    = sql_execute($sql_statement) or 
-            throw new Exception('sql_execute error: ' . mysql_error());
+            e_throw( 'sql_execute error: ' . mysql_error() );
         $sql_data      = sql_get_data($sql_result) or 
-            throw new Exception('sql_execute error: ' . mysql_error());
+            e_throw( 'sql_execute error: ' . mysql_error() );
         sql_release_data($sql_result);
     }
     catch(Exception $e)
@@ -98,7 +99,7 @@ function handle_api()
     global $ctx;
 
     //Initialize
-    $ctx['endpoint'] = $_SERVER[PATH_INFO];
+    $ctx['endpoint'] = $_SERVER['PATH_INFO'];
     $ctx['rq'] = $_REQUEST;
     $ctx['rs'] = array();
 
@@ -141,6 +142,14 @@ function handle_api()
 
     //Debug
     //dbg_out();
+}
+
+//
+//
+//
+function e_throw($m)
+{
+    throw new Exception($m);
 }
 
 //
@@ -193,6 +202,9 @@ function sql_connect()
     $ctx['sqlconn'] = 
         mysql_pconnect($ctx['sqlhost'], $ctx['sqlusername'], $ctx['sqlpassword'], $ctx['sqlflags']) 
             or die('MySQL Connection Error: ' . mysql_error());
+
+    mysql_select_db($ctx['sqldb']) 
+        or die('MySQL Connection Error: ' . mysql_error());
 }
 
 //
