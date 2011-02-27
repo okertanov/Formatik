@@ -4,6 +4,15 @@ Copyright (c) 2011 Oleg Kertanov <okertanov@gmail.com>
     The API Documentation
     =====================
 
+0. Apache Configuration
+-----------------------
+Action php-api-handler-v1 /api-handler.php virtual
+
+#API
+<Location /api>
+    SetHandler php-api-handler-v1
+</Location>
+    
 1. Endpoints
 ------------
     1.1   GET   /api/ping

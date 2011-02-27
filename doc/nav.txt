@@ -1,3 +1,5 @@
+Sencha Touch resources
+----------------------
 http://dev.sencha.com/deploy/touch/examples/
 http://dev.sencha.com/deploy/touch/examples/kitchensink/
 http://dev.sencha.com/deploy/touch/docs/
