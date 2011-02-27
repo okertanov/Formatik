@@ -25,7 +25,7 @@ function handle_ping()
     $rs['success']  = TRUE;
     $rs['msg']      = 'pong';
 
-    return json_encode($ctx['rs'], JSON_FORCE_OBJECT);
+    return json_encode($ctx['rs']);
 }
 function handle_auth()
 {
@@ -47,6 +47,13 @@ function handle_catalog()
 }
 function handle_default()
 {
+    global $ctx;
+    $rs = &$ctx['rs'];
+    $rs['endpoint'] = $ctx['endpoint'];
+    $rs['success']  = FALSE;
+    $rs['msg']      = 'Failure: unknown api endpoint.';
+
+    return json_encode($ctx['rs']);
 }
 
 //
@@ -64,7 +71,9 @@ function handle_api()
     $js_str = '';
 
     //Route & gather reply buffer
-    switch( explode('/', $ctx['endpoint'])[1] )
+    $ep_parts = explode('/', $ctx['endpoint']);
+    $ep_route = $ep_parts[2] or '';
+    switch( $ep_route )
     {
         case 'ping':
             $js_str = handle_ping();
@@ -97,7 +106,7 @@ function handle_api()
     echo $js_str;
 
     //Debug
-    dbg_out();
+    //dbg_out();
 }
 
 //
