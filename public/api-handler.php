@@ -13,11 +13,10 @@ ini_set("display_errors", 1);
 // Globals
 //
 $ctx = array();
-$ctx['sqlhost']         = ':/var/run/mysqld/mysqld.sock' or 'localhost'; 
+$ctx['sqlhost']         = 'localhost'; 
 $ctx['sqldb']           = 'formatikdb'; 
 $ctx['sqlusername']     = 'formatik';
 $ctx['sqlpassword']     = '9sTrTBBnnMO';
-$ctx['sqlflags']        = 0;
 
 //
 // API handlers
@@ -52,9 +51,9 @@ function handle_auth()
 
         $sql_statement = sprintf('call check_auth("%s", "%s");', $rs['username'], $rs['password']);
         $sql_result    = sql_execute($sql_statement) or 
-            e_throw( 'sql_execute error: ' . mysql_error() );
+            e_throw( 'sql_execute error: ' . sql_get_error() );
         $sql_data      = sql_get_data($sql_result) or 
-            e_throw( 'sql_execute error: ' . mysql_error() );
+            e_throw( 'not authenticated' );
         sql_release_data($sql_result);
     }
     catch(Exception $e)
@@ -200,23 +199,8 @@ function sql_connect()
     global $ctx;
     
     $ctx['sqlconn'] = 
-        mysql_pconnect($ctx['sqlhost'], $ctx['sqlusername'], $ctx['sqlpassword'], $ctx['sqlflags']) 
-            or die('MySQL Connection Error: ' . mysql_error());
-
-    mysql_select_db($ctx['sqldb']) 
-        or die('MySQL Connection Error: ' . mysql_error());
-}
-
-//
-// sql_refresh: updates mysql connection. 
-// returns true if connected, false otherwise
-//
-function sql_refresh()
-{
-    global $ctx;
-    if ( !mysql_ping($ctx['sqlconn']) )     sql_connect();
-
-    return mysql_ping($ctx['sqlconn']);
+        new mysqli($ctx['sqlhost'], $ctx['sqlusername'], $ctx['sqlpassword'], $ctx['sqldb']) 
+            or die('MySQL Connection Error: ' . mysqli_connect_error());
 }
 
 //
@@ -225,7 +209,7 @@ function sql_refresh()
 function sql_close()
 {
     global $ctx;
-    mysql_close($ctx['sqlconn']);
+    $ctx['sqlconn']->close();
 }
 
 //
@@ -233,9 +217,8 @@ function sql_close()
 //
 function sql_execute($sql)
 {
-    sql_refresh();
-
-    return mysql_query($sql);
+    global $ctx;
+    return $ctx['sqlconn']->query($sql);
 }
 
 //
@@ -243,9 +226,8 @@ function sql_execute($sql)
 //
 function sql_get_data($res)
 {
-    sql_refresh();
-    
-    return mysql_fetch_array($res, MYSQL_ASSOC);
+    global $ctx;
+    return $res->fetch_array(MYSQLI_ASSOC);
 }
 
 //
@@ -253,9 +235,16 @@ function sql_get_data($res)
 //
 function sql_release_data($res)
 {
-    sql_refresh();
+    $res->close();
+}
 
-    return mysql_free_result($res);
+//
+//
+//
+function sql_get_error()
+{
+    global $ctx;
+    return $ctx['sqlconn']->error;
 }
 
 //
