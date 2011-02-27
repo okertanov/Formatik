@@ -132,6 +132,7 @@ create table if not exists `weightclass`
 create table if not exists `order`
     (
         `id`               int not null primary key auto_increment,
+        `operator_id`      int not null default 0, 
         `direction_id`     int not null default 0, 
         `kind_id`          int not null default 0, 
         `category_id`      int not null default 0, 
@@ -144,22 +145,47 @@ create table if not exists `order`
         `datetimereceived` varchar(64) not null default '',
         `datetimestamp`    timestamp default now(),
         `description`      varchar(512) not null default '',
+        index(`operator_id`),
         index(`direction_id`),
         index(`datetimereceived`),
         index(`datetimestamp`),
-        constraint foreign key(`direction_id`) references `place`(`direction_id`)           
+        constraint foreign key(`operator_id`) references `operator`(`id`)           
             on delete restrict on update cascade,
-        constraint foreign key(`kind_id`) references `kind`(`kind_id`)                      
+        constraint foreign key(`direction_id`) references `place`(`id`)           
             on delete restrict on update cascade,
-        constraint foreign key(`category_id`) references `category`(`category_id`)          
+        constraint foreign key(`kind_id`) references `kind`(`id`)                      
             on delete restrict on update cascade,
-        constraint foreign key(`package_id`) references `package`(`package_id`)             
+        constraint foreign key(`category_id`) references `category`(`id`)          
             on delete restrict on update cascade,
-        constraint foreign key(`weightclass_id`) references `weightclass`(`weightclass_id`) 
+        constraint foreign key(`package_id`) references `package`(`id`)             
+            on delete restrict on update cascade,
+        constraint foreign key(`weightclass_id`) references `weightclass`(`id`) 
             on delete restrict on update cascade
     )
     engine InnoDB 
     comment 'The order table is all about the orders.';
+
+--  ---------------------------------------------------------
+--  Stored procedures 
+--  ---------------------------------------------------------
+
+--  
+--  Procedure: check_auth 
+--  
+delimiter // 
+drop procedure if exists check_auth//
+create procedure check_auth(IN usr varchar(64), IN pwd varchar(64))
+    reads sql data
+    comment 'Checks auth credintals on the given parameters.'
+    begin
+        select o.`username`, o.`password`, o.`address`, o.`phone`, o.`isadmin`, o.`description`, 
+                (strcmp(o.`password`, pwd) = 0) as authenticated
+        from `operator` o
+        where ( usr <> '' and pwd <> '' ) and
+              ( o.`username` <> '' and o.`password` <> '' ) and
+              ( o.`username` =  usr and BINARY o.`password` =  BINARY pwd );
+    end//
+delimiter ;
 
 --  ---------------------------------------------------------
 --  The initial data for the database

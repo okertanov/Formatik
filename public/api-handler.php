@@ -50,7 +50,7 @@ function handle_auth()
         if ( !strlen($rs['username']) or !strlen($rs['password']) )
             throw new Exception('Username or password couldn\'t be empty.');
 
-        $sql_statement = sprintf('call formatikdb_auth("%s", "%s");', $rs['username'], $rs['password']);
+        $sql_statement = sprintf('call check_auth("%s", "%s");', $rs['username'], $rs['password']);
         $sql_result    = sql_execute($sql_statement) or 
             e_throw( 'sql_execute error: ' . mysql_error() );
         $sql_data      = sql_get_data($sql_result) or 
