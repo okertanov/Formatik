@@ -413,9 +413,9 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         {
                             //0. Obtain model  //this stands "Ext.getCmp('settings_form')"
                             var my_form = Ext.getCmp('settings_form');
-                            my_form.operator.data['password'] = hex_md5(my_form.operator.data['password']);
                             my_form.updateRecord(my_form.operator);
-                            console.dir(my_form.operator);
+                            my_form.operator.data['password'] = hex_md5(my_form.operator.data['password']);
+                            my_form.load(my_form.operator);
 
                             //1. Post
                             my_form.submit({ 
@@ -425,7 +425,10 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                                                 console.dir(result);
                                                 //3. Set Cookie
                                                 SetLocalAuthConfig(my_form.operator.data['username'], my_form.operator.data['password']);
-                                                //4. Set username on panel if succeeded otherwise raise an error with alert
+                                                //4. Set address
+                                                my_form.operator.data['address'] = result.address || ''
+                                                my_form.load(my_form.operator);
+                                                //5. Set username on panel if succeeded otherwise raise an error with alert
                                             },
                                             failure: function(f, result) {
                                                 console.dir(result);
