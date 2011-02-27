@@ -26,12 +26,13 @@ use formatikdb;
 -- 
 --  User: formatik@localhost 
 -- 
+grant usage on `formatikdb`.* to `formatik`@`localhost`;
 drop user `formatik`@`localhost`;
 
 create user `formatik`@`localhost` 
     identified by '9sTrTBBnnMO';
 
-grant all privileges on formatikdb.* to `formatik`@`localhost`
+grant all privileges on `formatikdb`.* to `formatik`@`localhost`
     with grant option;
 
 -- 
