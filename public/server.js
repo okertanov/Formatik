@@ -104,13 +104,16 @@ function serve_request_api(request, response)
             case 'newtask':
                 response_http_code(request, response, 200);
                 break;
+            case 'tasks':
+                response_http_code(request, response, 200);
+                break;
             case 'settings':
+                response_http_code(request, response, 401);
+                break;
+            case 'auth':
                 response.writeHead(200, {"Content-Type": HTTPMimeTypes['json']});
                 response.write('{ "success":true, "msg":"Authenticated" }' + '\n');
                 response.end();
-                break;
-            case 'auth':
-                response_http_code(request, response, 401);
                 break;
             default:
                 throw 'API Exception: unknown api command.';

@@ -1,0 +1,56 @@
+Formatik Server Application.
+Copyright (c) 2011 Oleg Kertanov <okertanov@gmail.com>
+
+    The API Documentation
+    =====================
+
+1. Endpoints
+------------
+    1.1   GET   /api/ping
+                            RQ: '{}'
+                            RS: '{ "endpoint":"/api/ping", "success":true, "msg":"pong" }'
+
+    1.2   GET   /api/auth
+                            RQ: '{}' (via cookies)
+                            RS: '{ "endpoint":"/api/auth", "success":true, "msg":"authenticated", "username":"", "password":"" }'
+
+    1.3   POST  /api/auth
+                            RQ: '{ "username":"", "password":"" }'
+                            RS: '{ "endpoint":"/api/auth", "success":true, "msg":"authenticated", "username":"", "password":"" }'
+
+    1.4   GET   /api/settings
+                            RQ: '{}'
+                            RS: '{ "endpoint":"/api/settings", "success":true, "msg":"TBD: settings blob" }'
+
+    1.5   POST  /api/settings
+                            RQ: '{ "lang":"en", ... }'
+                            RS: '{ "endpoint":"/api/settings", "success":true, "msg":"TBD: settings blob" }'
+
+    1.6   POST  /api/newtask
+                            RQ: '{ Task properties, ... }'
+                            RS: '{ "endpoint":"/api/newtask", "success":true, "msg":"created" }'
+
+    1.7   POST  /api/settask 
+                            RQ: '{ "status":"new" || "status":"accepted" }'
+                            RS: '{ "endpoint":"/api/settask", "success":true, "msg":"modified" }'
+
+    1.8   GET   /api/tasks
+                            RQ: '{}'
+                            RS: '{ "endpoint":"/api/tasks", "success":true, "msg":"list", [Task properties list] }'
+
+    1.9   GET   /api/catalog
+                            RQ: '{}'
+                            RS: '{ "endpoint":"/api/catalog", "success":true, "msg":"list", [All Catalogs list] }'
+
+    1.10  GET   /api/catalog?catalog=name 
+                            RQ: '{}'
+                            RS: '{ "endpoint":"/api/catalog", "success":true, "msg":"list", ['Name' Catalog items] }'
+
+    1.11  POST  /api/catalog
+                            RQ: '{"catalog":"name"}'
+                            RS: '{ "endpoint":"/api/catalog", "success":true, "msg":"list", ['Name' Catalog items] }'
+
+
+2. Workflow
+-----------
+

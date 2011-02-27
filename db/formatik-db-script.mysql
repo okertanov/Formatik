@@ -43,6 +43,7 @@ create table if not exists `operator`
         `username`      varchar(64)  unique not null default '',
         `password`      varchar(64)  not null default '',
         `address`       varchar(512) not null default '',
+        `phone`         varchar(16)  not null default '',
         `isadmin`       bool    not null default false,
         `description`   varchar(512) not null default '',
         index(`username`),
@@ -166,9 +167,30 @@ create table if not exists `order`
 -- 
 --  Data: operator 
 -- 
-insert into `operator` (`username`, `password`, `address`, `isadmin`, `description`) values
-    ('okertanov', MD5('fmQAZ'),     'Riga, Latvia, +37125864676', true, 'The developer of the system.'),
-    ('nata',      MD5('fm1234567'), 'Riga, Latvia, +37127700257', true, 'Main system operator.');
+insert into `operator` (`username`, `password`, `address`, `phone`, `isadmin`, `description`) values
+    ('okertanov', MD5('fmQAZ'),     'Riga, Latvia, LV-1012',                    '+37125864676', true,  'The developer of the system.'),
+    ('nata',      MD5('fm1234567'), 'Riga, Latvia, LV-1012',                    '+37127700257', true,  'Main system operator.'),
+    ('PKS',       MD5('fmPKS'),     'Akademijas laukums 1, Riga',               '+37167320148', false, 'Admin Operator'),
+    ('AL1',       MD5('fmAL1'),     'TC Alfa, Brīvības 372, Riga',              '+37167076480', false, 'TC Alfa Operator 1'),
+    ('AL2',       MD5('fmAL2'),     'TC Alfa, Brīvības 372, Riga',              '+37167076480', false, 'TC Alfa Operator 2'),
+    ('ML1',       MD5('fmML1'),     'TC Mols, Krasta 46, Riga',                 '+37167030388', false, 'TC Mols Operator 1'),
+    ('ML2',       MD5('fmML2'),     'TC Mols, Krasta 46, Riga',                 '+37167030388', false, 'TC Mols Operator 2'),
+    ('OR1',       MD5('fmOR1'),     'TC Origo, Stacijas laukums 4, Riga',       '+37167073039', false, 'TC Origo Operator 1'),
+    ('OR2',       MD5('fmOR2'),     'TC Origo, Stacijas laukums 4, Riga',       '+37167073039', false, 'TC Origo Operator 2'),
+    ('GC1',       MD5('fmGC1'),     'TC Galerija centrs,Audēju 16, Riga',       '+37167104547', false, 'TC Galerija centrs Operator 1'),
+    ('GC2',       MD5('fmGC2'),     'TC Galerija centrs,Audēju 16, Riga',       '+37167104547', false, 'TC Galerija centrs Operator 2'),
+    ('OL1',       MD5('fmOL1'),     'TC Olympia, Āzenes 5, Riga',               '+37167065744', false, 'TC Olympia Operator 1'),
+    ('OL2',       MD5('fmOL2'),     'TC Olympia, Āzenes 5, Riga',               '+37167065744', false, 'TC Olympia Operator 2'),
+    ('SP1',       MD5('fmSP1'),     'TC Spice, Lielirbes 29, Riga',             '+37167612580', false, 'TC Spice Operator 1'),
+    ('SP2',       MD5('fmSP2'),     'TC Spice, Lielirbes 29, Riga',             '+37167612580', false, 'TC Spice Operator 2'),
+    ('MI1',       MD5('fmMI1'),     'TC Minsk, Nīcgales 2, Riga',               '+37167562217', false, 'TC Minsk Operator 1'),
+    ('MI2',       MD5('fmMI2'),     'TC Minsk, Nīcgales 2, Riga',               '+37167562217', false, 'TC Minsk Operator 2'),
+    ('RI1',       MD5('fmRI1'),     'TC Rimi, Deglava 110, Riga',               '+37167572200', false, 'TC Rimi Operator 1'),
+    ('RI2',       MD5('fmRI2'),     'TC Rimi, Deglava 110, Riga',               '+37167572200', false, 'TC Rimi Operator 2'),
+    ('DO1',       MD5('fmDO1'),     'TC Dole, Maskavas 367, Riga',              '+37167106600', false, 'TC Dole Operator 1'),
+    ('DO2',       MD5('fmDO2'),     'TC Dole, Maskavas 367, Riga',              '+37167106600', false, 'TC Dole Operator 2'),
+    ('DS1',       MD5('fmDS1'),     'Centrālajā dzelzceļa stacijā, tunelis B',  '+37167073034', false, 'Dzelzceļa stacijā Operator 1'),
+    ('DS2',       MD5('fmDS2'),     'Centrālajā dzelzceļa stacijā, tunelis B',  '+37167073034', false, 'Dzelzceļa stacijā Operator 2');
 
 -- 
 --  Data: place 

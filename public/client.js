@@ -341,7 +341,7 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
         title: 'Auth',
         xtype: 'form',
         id: 'settings_form',
-        url: '/api/settings',
+        url: '/api/auth',
         scroll: 'vertical',
         items: 
         [
@@ -411,25 +411,27 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         ui: 'action',
                         handler: function()
                         {
-                            //0. Obtain model
-                            Ext.getCmp('settings_form').updateRecord(Ext.getCmp('settings_form').operator); //this stands "Ext.getCmp('settings_form')"
-                            console.dir(Ext.getCmp('settings_form').operator);
+                            //0. Obtain model  //this stands "Ext.getCmp('settings_form')"
+                            var my_form = Ext.getCmp('settings_form');
+                            my_form.updateRecord(my_form.operator);
+                            my_form.operator.data['password'] = hex_md5(my_form.operator.data['password']);
+                            console.dir(my_form.operator);
 
                             //1. Post
-                            Ext.getCmp('settings_form').submit({ 
+                            my_form.submit({ 
                                             waitMsg: {message:'Submitting', cls : 'demos-loading'},
                                             //2. Wait for xhr reply on the auth request
                                             success: function(f, result) {
                                                 console.dir(result);
                                                 //3. Set Cookie
-                                                SetLocalAuthConfig(this.operator.data['username'], this.operator.data['password']);
+                                                SetLocalAuthConfig(my_form.operator.data['username'], my_form.operator.data['password']);
                                                 //4. Set username on panel if succeeded otherwise raise an error with alert
                                             },
                                             failure: function(f, result) {
                                                 console.dir(result);
                                                 Ext.Msg.alert('Error', result.responseText, Ext.emptyFn);
                                             }
-                                        });
+                            });
                         }
                     }
                 ]
