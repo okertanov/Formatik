@@ -270,7 +270,6 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                 ]
             },
             {
-                layout: 'hbox',
                 xtype: 'fieldset',
                 title: 'Оформление заказа',
                 instructions: 'Введите информацию об оформленном заказе.',
@@ -290,7 +289,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                     {
                         xtype: 'textfield',
                         name: 'datetimereceived',
-                        label: 'Дата и время оформления',
+                        label: 'Время оформления',
                         placeHolder: 'DD.MM.YY HH:MM',
                         centered: true,
                         disabled: true,
@@ -399,7 +398,14 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                         ui: '', 
                         handler: function()
                         {
-                            Ext.getCmp('settings_form').reset();
+                            var my_form = Ext.getCmp('settings_form');
+                            my_form.operator = Ext.ModelMgr.create({
+                                                username: '',
+                                                password: '',
+                                                address: ''
+                            }, 'Operator');
+                            my_form.reset();
+                            my_form.load(my_form.operator);
                             ResetLocalAuthConfig();
                         }
                     }, 
@@ -424,7 +430,8 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                                             success: function(f, result) {
                                                 console.dir(result);
                                                 //3. Set Cookie
-                                                SetLocalAuthConfig(my_form.operator.data['username'], my_form.operator.data['password']);
+                                                SetLocalAuthConfig(my_form.operator.data['username'], 
+                                                    my_form.operator.data['password']);
                                                 //4. Set address
                                                 my_form.operator.data['address'] = result.address || ''
                                                 my_form.load(my_form.operator);
@@ -446,13 +453,48 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
     initComponent: function() {
         Formatik.views.Settings.superclass.initComponent.call(this);
 
+        var my_form = Ext.getCmp('settings_form');
+
+        //1. Set known fields
         var auth = GetLocalAuthConfig();
-        Ext.getCmp('settings_form').operator = Ext.ModelMgr.create({
+        my_form.operator = Ext.ModelMgr.create({
                 username: auth.username,
                 password: auth.password,
                 address: ''
             }, 'Operator');
-        Ext.getCmp('settings_form').load(this.operator);
+        my_form.load(my_form.operator);
+
+        //2. Ask for the auth and address
+        if (auth.username.length && auth.password.length)
+        {
+            Ext.Ajax.request({
+                url: '/api/auth',
+                method: 'POST',
+                params : { username: auth.username, password: auth.password },
+                success: function(result, request) 
+                {
+                    var reply = Ext.util.JSON.decode(result.responseText);
+                    if (reply.success)
+                    {
+                        my_form.updateRecord(my_form.operator);
+                        my_form.operator.data['address'] = reply.address || ''
+                        my_form.load(my_form.operator);
+                    }
+                    else
+                    {
+                        this.failure(result, request);
+                    }
+                },
+                failure: function(result, request)
+                {
+                    var reply = Ext.util.JSON.decode(result.responseText);
+                    var err_str = reply.msg || result;
+                    my_form.updateRecord(my_form.operator);
+                    my_form.operator.data['address'] = err_str || ''
+                    my_form.load(my_form.operator);
+                }        
+            });
+        }
     }       
 });
 
