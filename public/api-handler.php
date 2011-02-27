@@ -14,14 +14,89 @@ $ctx['sqlpassword']     = '9sTrTBBnnMO';
 $ctx['sqlflags']        = 0;
 
 //
+// API handlers
+// return json buffer
+//
+function handle_ping()
+{
+    global $ctx;
+    $rs = &$ctx['rs'];
+    $rs['endpoint'] = $ctx['endpoint'];
+    $rs['success']  = TRUE;
+    $rs['msg']      = 'pong';
+
+    return json_encode($ctx['rs'], JSON_FORCE_OBJECT);
+}
+function handle_auth()
+{
+}  
+function handle_settings()
+{
+}
+function handle_newtask()
+{
+}
+function handle_settask()
+{
+}
+function handle_tasks()
+{
+}
+function handle_catalog()
+{
+}
+function handle_default()
+{
+}
+
+//
 // handle_api: api dispatcher
 //
 function handle_api()
 {
     global $ctx;
+
+    //Initialize
     $ctx['endpoint'] = $_SERVER[PATH_INFO];
     $ctx['rq'] = $_REQUEST;
     $ctx['rs'] = array();
+
+    $js_str = '';
+
+    //Route & gather reply buffer
+    switch( explode('/', $ctx['endpoint'])[1] )
+    {
+        case 'ping':
+            $js_str = handle_ping();
+            break;
+        case 'auth':
+            $js_str = handle_auth();
+            break;
+        case 'settings':
+            $js_str = handle_settings();
+            break;
+        case 'newtask':
+            $js_str = handle_newtask();
+            break;
+        case 'settask':
+            $js_str = handle_settask();
+            break;
+        case 'tasks':
+            $js_str = handle_tasks();
+            break;
+        case 'catalog':
+            $js_str = handle_catalog();
+            break;
+        default:
+            $js_str = handle_default();
+            break;
+    }
+
+    //Output 
+    header('Content-type: application/json');
+    echo $js_str;
+
+    //Debug
     dbg_out();
 }
 
@@ -78,12 +153,15 @@ function sql_connect()
 }
 
 //
-// sql_refresh: updates mysql connection
+// sql_refresh: updates mysql connection. 
+// returns true if connected, false otherwise
 //
 function sql_refresh()
 {
     global $ctx;
     if ( !mysql_ping($ctx['sqlconn']) )     sql_connect();
+
+    return mysql_ping($ctx['sqlconn']);
 }
 
 //
