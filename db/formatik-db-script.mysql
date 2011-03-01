@@ -169,10 +169,11 @@ create table if not exists `order`
 --  Stored procedures 
 --  ---------------------------------------------------------
 
+delimiter // 
+
 --  
 --  Procedure: check_auth 
 --  
-delimiter // 
 drop procedure if exists check_auth//
 create procedure check_auth(IN usr varchar(64), IN pwd varchar(64))
     reads sql data
@@ -183,8 +184,75 @@ create procedure check_auth(IN usr varchar(64), IN pwd varchar(64))
         from `operator` o
         where ( usr <> '' and pwd <> '' ) and
               ( o.`username` <> '' and o.`password` <> '' ) and
-              ( o.`username` =  usr and BINARY o.`password` =  BINARY pwd );
+              ( o.`username` =  usr and BINARY o.`password` =  BINARY pwd )
+        order by authenticated;
     end//
+
+--  
+--  Procedure: get_places
+--  
+drop procedure if exists get_places//
+create procedure get_places()
+    reads sql data
+    comment 'Retreives places.'
+    begin
+        select p.`direction_id` as cid, p.`name` as cname
+        from `place` p
+        order by p.`direction_id`;
+    end//
+
+--  
+--  Procedure: get_kinds
+--  
+drop procedure if exists get_kinds//
+create procedure get_kinds()
+    reads sql data
+    comment 'Retreives kinds.'
+    begin
+        select k.`kind_id` as cid, k.`name` as cname
+        from `kind` k
+        order by k.`kind_id`;
+    end//
+
+--  
+--  Procedure: get_categories
+--  
+drop procedure if exists get_categories//
+create procedure get_categories()
+    reads sql data
+    comment 'Retreives categories.'
+    begin
+        select c.`category_id` as cid, c.`name` as cname
+        from `category` c
+        order by c.`category_id`;
+    end//
+
+--  
+--  Procedure: get_packages
+--  
+drop procedure if exists get_packages//
+create procedure get_packages()
+    reads sql data
+    comment 'Retreives packages.'
+    begin
+        select p.`package_id` as cid, p.`name` as cname
+        from `package` p
+        order by p.`package_id`;
+    end//
+
+--  
+--  Procedure: get_weightclasses
+--  
+drop procedure if exists get_weightclasses//
+create procedure get_weightclasses()
+    reads sql data
+    comment 'Retreives weightclasses.'
+    begin
+        select w.`weightclass_id` as cid, w.`name` as cname
+        from `weightclass` w
+        order by w.`weightclass_id`;
+    end//
+
 delimiter ;
 
 --  ---------------------------------------------------------

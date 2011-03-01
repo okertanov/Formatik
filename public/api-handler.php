@@ -32,6 +32,7 @@ function handle_ping()
 
     return json_encode($ctx['rs']);
 }
+
 function handle_auth()
 {
     global $ctx;
@@ -47,7 +48,7 @@ function handle_auth()
         $rs['password'] = isset($rq['password']) ? $rq['password'] : '';
 
         if ( !strlen($rs['username']) or !strlen($rs['password']) )
-            throw new Exception('Username or password couldn\'t be empty.');
+            e_throw('Username or password couldn\'t be empty.');
 
         $sql_statement = sprintf('call check_auth("%s", "%s");', $rs['username'], $rs['password']);
         $sql_result    = sql_execute($sql_statement) or 
@@ -70,21 +71,80 @@ function handle_auth()
 
     return json_encode($ctx['rs']);
 }  
+
 function handle_settings()
 {
 }
+
 function handle_newtask()
 {
 }
+
 function handle_settask()
 {
 }
+
 function handle_tasks()
 {
 }
+
 function handle_catalog()
 {
+    global $ctx;
+    $rq = &$ctx['rq'];
+    $rs = &$ctx['rs'];
+    $rs['endpoint'] = $ctx['endpoint'];
+    $rs['success']  = FALSE;
+    $rs['msg']      = 'empty';
+    
+    try
+    {
+        $rs['catalog'] = isset($rq['catalog']) ? $rq['catalog'] : '';
+        $sql_statement = '';
+        switch ($rs['catalog'])
+        {
+            case 'places':
+                $sql_statement = sprintf('call get_places();');
+                break;
+            case 'kinds':
+                $sql_statement = sprintf('call get_kinds();');
+                break;
+            case 'categories':
+                $sql_statement = sprintf('call get_categories();');
+                break;
+            case 'packages':
+                $sql_statement = sprintf('call get_packages();');
+                break;
+            case 'weightclasses':
+                $sql_statement = sprintf('call get_weightclasses();');
+                break;
+            default:
+                e_throw('Catalog parameter couldn\'t be empty.');
+                break;
+        }
+        if ( !strlen($sql_statement) )
+            e_throw('Unknown catalog parameter.');
+        $sql_result    = sql_execute($sql_statement) or 
+            e_throw( 'sql_execute error: ' . sql_get_error() );
+        while( ($sql_data = sql_get_data($sql_result)) );
+        {
+            $rs["$rs['catalog']"][] = array(
+                                                'id'   => $sql_data['cid'],
+                                                'name' => $sql_data['cname'],
+                                           );
+        }
+
+        sql_release_data($sql_result);
+    }
+    catch(Exception $e)
+    {
+        $rs['success']  = FALSE;
+        $rs['msg']      = 'Exception: ' . $e->getMessage();
+    }
+
+    return json_encode($ctx['rs']);
 }
+
 function handle_default()
 {
     global $ctx;

@@ -57,10 +57,12 @@ Action php-api-handler-v1 /api-handler.php virtual
     1.10  GET   /api/catalog?catalog=name 
                             RQ: '{}'
                             RS: '{ "endpoint":"/api/catalog", "success":true, "msg":"list", ['Name' Catalog items] }'
+                            RF: '{ "endpoint":"/api/catalog", "success":true, "msg":"empty" }'
 
     1.11  POST  /api/catalog
-                            RQ: '{"catalog":"name"}'
+                            RQ: '{ "catalog":"name" }'
                             RS: '{ "endpoint":"/api/catalog", "success":true, "msg":"list", ['Name' Catalog items] }'
+                            RF: '{ "endpoint":"/api/catalog", "success":true, "msg":"empty" }'
 
 
 2. Workflow
