@@ -1,0 +1,12 @@
+Formatik TODO:
+--------------
+    [ ] Auth
+    [ ] Redirect/Enable/Disable unauthorized
+    [ ] Catalogs
+    [ ] Post order
+    [ ] Orders list
+    [ ] Admin interface
+    [ ] Code review/Security
+    [ ] Tests
+    [ ] Deployment 
+
