@@ -99,36 +99,36 @@ function handle_catalog()
     
     try
     {
-        $rs['catalog'] = isset($rq['catalog']) ? $rq['catalog'] : '';
+        $rs['name'] = isset($rq['name']) ? $rq['name'] : '';
         $sql_statement = '';
-        switch ($rs['catalog'])
+        switch ($rs['name'])
         {
             case 'places':
-                $sql_statement = sprintf('call get_places();');
+                $sql_statement = sprintf('call get_places;');
                 break;
             case 'kinds':
-                $sql_statement = sprintf('call get_kinds();');
+                $sql_statement = sprintf('call get_kinds;');
                 break;
             case 'categories':
-                $sql_statement = sprintf('call get_categories();');
+                $sql_statement = sprintf('call get_categories;');
                 break;
             case 'packages':
-                $sql_statement = sprintf('call get_packages();');
+                $sql_statement = sprintf('call get_packages;');
                 break;
             case 'weightclasses':
-                $sql_statement = sprintf('call get_weightclasses();');
+                $sql_statement = sprintf('call get_weightclasses;');
                 break;
             default:
-                e_throw('Catalog parameter couldn\'t be empty.');
+                e_throw('Catalog parameter is unknown.');
                 break;
         }
         if ( !strlen($sql_statement) )
             e_throw('Unknown catalog parameter.');
         $sql_result    = sql_execute($sql_statement) or 
             e_throw( 'sql_execute error: ' . sql_get_error() );
-        while( ($sql_data = sql_get_data($sql_result)) );
+        while( $sql_data = sql_get_data($sql_result) );
         {
-            $rs["$rs['catalog']"][] = array(
+            $rs[$rs['name']][] = array(
                                                 'id'   => $sql_data['cid'],
                                                 'name' => $sql_data['cname'],
                                            );
