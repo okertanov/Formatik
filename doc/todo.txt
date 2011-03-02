@@ -1,11 +1,16 @@
 Formatik TODO:
 --------------
-    [ ] Auth
+    [ ] Auth/Cookies
     [ ] Redirect/Enable/Disable unauthorized
-    [ ] Catalogs
+    [x] Catalogs
+    [ ] Two steps order
     [ ] Post order
+    [ ] Recalculate order's price
     [ ] Orders list
     [ ] Admin interface
+    [ ] User activity/Audit
+    [ ] Error handling
+    [ ] Alive monitoring/Heartbeat/Timers
     [ ] Code review/Security
     [ ] Tests
     [ ] Deployment 
