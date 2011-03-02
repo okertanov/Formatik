@@ -19,7 +19,7 @@ Ext.setup(
 Ext.regModel('Order', 
 {
     fields: [   
-                'id', 'direction', 'kind', 'category', 'package', 
+                'id', 'operator', 'direction', 'kind', 'category', 'package', 
                 'weightclass', 'weight', 'numplaces', 'cost', 'waybill', 
                 'datetimereceived', 'datetimestamp', 'description'
             ]
@@ -91,151 +91,34 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         name: 'direction',
                         label: 'Направление',
                         placeHolder: 'Выберите направление доставки',
-                        options: 
-                        [
-                            {
-                                text: 'Maskava',
-                                value: '1'
-                            },
-                            {
-                                text: 'Sankt-Pēterburga',
-                                value: '2'
-                            },
-                            {
-                                text: 'Apgabala centri Krievija',
-                                value: '3'
-                            },
-                            {
-                                text: 'Viļņa, Tallinna',
-                                value: '4'
-                            },
-                            {
-                                text: 'Apgabala centri Lietuva, Igaunija',
-                                value: '5'
-                            },
-                            {
-                                text: 'Minska',
-                                value: '6'
-                            },
-                            {
-                                text: 'Apgabala centri Baltkrievija',
-                                value: '7'
-                            },
-                            {
-                                text: 'Kijeva',
-                                value: '8'
-                            },
-                            {
-                                text: 'Apgabala centri Ukraina',
-                                value: '9'
-                            },
-                            {
-                                text: 'Almati',
-                                value: '10'
-                            },
-                            {
-                                text: 'Kazahstāna',
-                                value: '11'
-                            },
-                            {
-                                text: 'Ašhabada',
-                                value: '12'
-                            },
-                            {
-                                text: 'Biškeka',
-                                value: '13'
-                            },
-                            {
-                                text: 'Dušanbe',
-                                value: '14'
-                            },
-                            {
-                                text: 'Taškenta',
-                                value: '15'
-                            },
-                            {
-                                text: 'Citāds',
-                                value: '99'
-                            }
-                        ]
+                        options: []
                     },
                     {
                         xtype: 'selectfield',
                         name: 'kind',
                         label: 'Вид отправления',
-                        options: 
-                        [
-                            {
-                                text: 'Документы',
-                                value: '1'
-                            },
-                            {
-                                text: 'Личные документы',
-                                value: '2'
-                            },
-                            {
-                                text: 'Товар',
-                                value: '3'
-                            }
-                        ]
+                        options: []
                     },
                     {
                         xtype: 'selectfield',
                         name: 'category',
                         label: 'Категория отправления',
                         placeHolder: 'Тип доставки отправления',
-                        options: 
-                        [
-                            {
-                                text: 'Biznesa klasē',
-                                value: '1'
-                            },
-                            {
-                                text: 'OFF TIME',
-                                value: '2'
-                            },
-                            {
-                                text: 'Stingri uz rokas',
-                                value: '3'
-                            },
-                            {
-                                text: 'Ekspress',
-                                value: '4'
-                            }
-                        ]
+                        options: []
+                    },
+                    {
+                        xtype: 'selectfield',
+                        name: 'package',
+                        label: 'Упаковка отправления',
+                        placeHolder: 'Вид упаковки отправления',
+                        options: []
                     },
                     {
                         xtype: 'selectfield',
                         name: 'weightclass',
                         label: 'Вес отправления',
                         placeHolder: 'Вес отправления в кг',
-                        options: 
-                        [
-                            {
-                                text: 'Lidz 200 g',
-                                value: '1'
-                            },
-                            {
-                                text: '0,200 g - 0,500 g',
-                                value: '2'
-                            },
-                            {
-                                text: '0,501 g - 1 kg',
-                                value: '3'
-                            },
-                            {
-                                text: '1 kg - 1,5 kg',
-                                value: '4'
-                            },
-                            {
-                                text: '1,501 kg - 2 kg',
-                                value: '5'
-                            },
-                            {
-                                text: 'Vairak 2 kg',
-                                value: '6'
-                            }
-                        ]
+                        options: []
                     },
                     {
                         xtype: 'textfield',
@@ -322,6 +205,30 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
     }],
     initComponent: function() {
         Formatik.views.NewTask.superclass.initComponent.call(this);
+        
+        Ext.Ajax.request({
+                url: '/api/catalog/places',
+                method: 'GET',
+                params : {  },
+                success: function(result, request) 
+                {
+                    console.dir(result, request);
+                    var reply = Ext.util.JSON.decode(result.responseText);
+                    if (reply.success)
+                    {
+                    }
+                    else
+                    {
+                        this.failure(result, request);
+                    }
+                },
+                failure: function(result, request)
+                {
+                    console.dir(result, request);
+                    var reply = Ext.util.JSON.decode(result.responseText);
+                    var err_str = reply.msg || result;
+                }        
+        });
     }       
 });
 
