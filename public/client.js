@@ -94,29 +94,25 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                     {
                         xtype: 'selectfield',
                         name: 'kind',
-                        label: 'Вид отправления',
-                        options: []
+                        label: 'Вид отправления'
                     },
                     {
                         xtype: 'selectfield',
                         name: 'category',
                         label: 'Категория отправления',
-                        placeHolder: 'Тип доставки отправления',
-                        options: []
+                        placeHolder: 'Тип доставки отправления'
                     },
                     {
                         xtype: 'selectfield',
                         name: 'package',
                         label: 'Упаковка отправления',
-                        placeHolder: 'Вид упаковки отправления',
-                        options: []
+                        placeHolder: 'Вид упаковки отправления'
                     },
                     {
                         xtype: 'selectfield',
                         name: 'weightclass',
                         label: 'Вес отправления',
-                        placeHolder: 'Вес отправления в кг',
-                        options: []
+                        placeHolder: 'Вес отправления в кг'
                     },
                     {
                         xtype: 'textfield',
@@ -150,7 +146,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                     }
                 ]
             },
-            {
+            /*{
                 xtype: 'fieldset',
                 title: 'Оформление заказа',
                 instructions: 'Введите информацию об оформленном заказе.',
@@ -179,7 +175,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         readOnly: true,
                     }
                 ]
-            },
+            },*/
             {
                 layout: 'hbox',
                 defaults: {xtype: 'button', style: 'margin-right: .5em;'},
@@ -350,6 +346,8 @@ Formatik.views.Settings= Ext.extend(Ext.Panel,
                                                 my_form.operator.data['address'] = result.address || ''
                                                 my_form.load(my_form.operator);
                                                 //5. Set username on panel if succeeded otherwise raise an error with alert
+
+                                                //6. Reinit authorized UI
                                             },
                                             failure: function(f, result) {
                                                 console.dir(result);
