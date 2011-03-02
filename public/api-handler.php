@@ -99,7 +99,7 @@ function handle_catalog()
     
     try
     {
-        $rs['name'] = isset($rq['name']) ? $rq['name'] : '';
+        $rs['name'] = ( isset($rq['name']) ? $rq['name'] : ( isset($ctx['urlparts'][3] ? $ctx['urlparts'][3] : '' ) ) );
         $sql_statement = '';
         switch ($rs['name'])
         {
@@ -172,8 +172,8 @@ function handle_api()
     $js_str = '';
 
     //Route & gather reply buffer
-    $ep_parts = explode('/', $ctx['endpoint']);
-    $ep_route = isset($ep_parts[2]) ? $ep_parts[2] : '';
+    $ctx['urlparts'] = explode('/', $ctx['endpoint']);
+    $ep_route = isset($ctx['urlparts'][2]) ? $ctx['urlparts'][2] : '';
     switch( $ep_route )
     {
         case 'ping':
