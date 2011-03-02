@@ -260,3 +260,10 @@ footer a.up
     width: 100%;
     height: 500px;
 }
+
+/*Sencha*/
+.x-form-fieldset
+{
+        margin: 0 !important;
+}
+

@@ -65,14 +65,17 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
 {
     title: 'Оформление заказа',
     iconCls: 'favorites',
+    layoutConfig: { pack: 'top', align: 'middle' },
     fullscreen: true,
     items: 
     [{
         title: 'NewTask',
         xtype: 'form',
+        scroll: 'vertical',
+        layout: {type: 'vbox', pack: 'top', align: 'justify'},
+        autoScroll: false,
         id: 'new_task_form',
         url: '/api/newtask',
-        scroll: 'vertical',
         items: 
         [
             {
@@ -240,7 +243,7 @@ Ext.regModel('Operator',
     fields: ['id', 'username', 'password', 'address', 'isadmin', 'description']
 });
 
-Formatik.views.Settings= Ext.extend(Ext.Panel, 
+Formatik.views.Settings = Ext.extend(Ext.Panel, 
 {
     title: 'Настройки',
     iconCls: 'settings',
@@ -496,6 +499,9 @@ Formatik.App = Ext.extend(Ext.Panel, {
       console.log('afterRender');
       Formatik.App.superclass.afterRender.apply(this, arguments);
       //Ext.getBody().on(Ext.isChrome ? 'click' : 'tap', this.onLinkTap, this, {delegate: 'a.test'});
+      this.tabs.items.each(function(card) {
+            if (card.scroller) { card.scroller.scrollTo({x: 0, y: 0}, false); }
+      });
   },
 
   onLinkTap: function(e, t) {
@@ -518,9 +524,6 @@ Formatik.App = Ext.extend(Ext.Panel, {
     
   onBeforeActivate: function() {
       console.log('onBeforeActivate');
-      this.tabs.items.each(function(card) {
-        if (card.scroller) { card.scroller.scrollTo({x: 0, y: 0}, false); }
-      });
   },
     
   onBeforeDeactivate: function() {
