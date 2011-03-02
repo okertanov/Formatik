@@ -28,7 +28,7 @@ Ext.regModel('Order',
 Formatik.views.Tasks = Ext.extend(Ext.List, 
 {
     id: 'tasks_list',
-    title: 'Заявки',
+    title: 'Заказы',
     iconCls: 'bookmarks',
     badgeText: '0',
     scroll: 'vertical',
