@@ -99,7 +99,7 @@ function handle_catalog()
     
     try
     {
-        $rs['name'] = ( isset($rq['name']) ? $rq['name'] : ( isset($ctx['urlparts'][3] ? $ctx['urlparts'][3] : '' ) ) );
+        $rs['name'] = ( isset($rq['name']) ? $rq['name'] : ( isset($ctx['urlparts'][3]) ? $ctx['urlparts'][3] : '' ) );
         $sql_statement = '';
         switch ($rs['name'])
         {
