@@ -126,15 +126,15 @@ function handle_catalog()
             e_throw('Unknown catalog parameter.');
         $sql_result    = sql_execute($sql_statement) or 
             e_throw( 'sql_execute error: ' . sql_get_error() );
-        print_r($sql_result);
-        while( $sql_data = sql_get_data($sql_result) );
+        while( $sql_data = sql_get_data($sql_result) )
         {
             $rs[$rs['name']][] = array(
-                                                'id'   => $sql_data['cid'],
-                                                'name' => $sql_data['cname'],
-                                           );
+                                            'value' => $sql_data['cid'],
+                                            'text'  => $sql_data['cname']
+                                      );
+            $rs['success']  = TRUE;
+            $rs['msg']      = 'list';
         }
-
         sql_release_data($sql_result);
     }
     catch(Exception $e)
@@ -293,7 +293,6 @@ function sql_execute($sql)
 //
 function sql_get_data($res)
 {
-    global $ctx;
     return $res->fetch_array(MYSQLI_ASSOC);
 }
 
