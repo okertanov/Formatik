@@ -126,6 +126,7 @@ function handle_catalog()
             e_throw('Unknown catalog parameter.');
         $sql_result    = sql_execute($sql_statement) or 
             e_throw( 'sql_execute error: ' . sql_get_error() );
+        print_r($sql_result);
         while( $sql_data = sql_get_data($sql_result) );
         {
             $rs[$rs['name']][] = array(
@@ -172,7 +173,7 @@ function handle_api()
 
     //Route & gather reply buffer
     $ep_parts = explode('/', $ctx['endpoint']);
-    $ep_route = $ep_parts[2] or '';
+    $ep_route = isset($ep_parts[2]) ? $ep_parts[2] : '';
     switch( $ep_route )
     {
         case 'ping':
