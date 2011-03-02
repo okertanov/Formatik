@@ -85,13 +85,11 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                 },
                 items: 
                 [
-                    /*******************************/
                     {
                         xtype: 'selectfield',
                         name: 'direction',
                         label: 'Направление',
-                        placeHolder: 'Выберите направление доставки',
-                        options: []
+                        placeHolder: 'Выберите направление доставки'
                     },
                     {
                         xtype: 'selectfield',
@@ -206,28 +204,37 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
     initComponent: function() {
         Formatik.views.NewTask.superclass.initComponent.call(this);
         
-        Ext.Ajax.request({
-                url: '/api/catalog/places',
-                method: 'GET',
-                params : {  },
-                success: function(result, request) 
-                {
-                    console.dir(result, request);
-                    var reply = Ext.util.JSON.decode(result.responseText);
-                    if (reply.success)
+        [{id:0,name:'places'}, {id:1,name:'kinds'}, {id:2,name:'categories'}, {id:3,name:'packages'}, {id:4,name:'weightclasses'}].
+        forEach( function(el, idx, arr){
+            Ext.Ajax.request({
+                    url: '/api/catalog/' + el.name,
+                    method: 'GET',
+                    params : {  },
+                    success: function(result, request) 
                     {
-                    }
-                    else
+                        var reply = Ext.util.JSON.decode(result.responseText);
+                        if (reply.success)
+                        {
+                            var select_obj = Ext.getCmp('new_task_form').items.get(0).items.get(el.id); //form->fieldset(0)->field(0)
+                            if ( typeof(select_obj) == 'object' && typeof(reply) == 'object' )
+                            {
+                                select_obj.setOptions(reply[el.name]);
+                                select_obj.reset();
+                            }
+                        }
+                        else
+                        {
+                            this.failure(result, request);
+                        }
+                    },
+                    failure: function(result, request)
                     {
-                        this.failure(result, request);
-                    }
-                },
-                failure: function(result, request)
-                {
-                    console.dir(result, request);
-                    var reply = Ext.util.JSON.decode(result.responseText);
-                    var err_str = reply.msg || result;
-                }        
+                        console.dir(result, request);
+                        var reply = Ext.util.JSON.decode(result.responseText);
+                        var err_str = reply.msg || result;
+                        console.log(err_str);
+                    }        
+            });
         });
     }       
 });
