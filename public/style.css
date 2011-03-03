@@ -3,82 +3,86 @@
     Copyright (c) 2011 Oleg Kertanov <okertanov@gmail.com>
 */
 
-*{
-    /* Universal reset: */
+*
+{
+    /*reset*/
     margin:0;
     padding:0;
 }
 
-header,footer,
-article,section,
+header,
+footer,
+article,
+section,
 hgroup,nav,
-figure{
-    /* Giving a display value to the HTML5 rendered elements: */
+figure
+{
     display:block;
 }
 
-body{
-    /* Setting the default text color, size, page background and a font stack: */
-    font-size:0.825em;
+body
+{
+    /*font-size:0.825em;
     color:#fcfcfc;
     background-color:#355664;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:Arial, Helvetica, sans-serif;*/
 }
 
-img{
-    border:0 !important;
-    border-style:none !important;
+img
+{
+    /*border:0 !important;
+    border-style:none !important;*/
 }
 
-/* Hyperlink Styles: */
-
-a, a:visited {
+a, a:visited 
+{
     color:#0196e3;
     text-decoration:none;
     outline:none;
 }
 
-a:hover{
+a:hover
+{
     text-decoration:underline;
 }
 
-/* Headings: */
-
-h1,h2,h3{
-    font-family:"Myriad Pro","Helvetica Neue",Helvetica,Arial,Sans-Serif;
+h1,h2,h3
+{
+    font-family:"Helvetica Neue",Helvetica,Arial,Sans-Serif;
     text-shadow:0 1px 1px black;
 }
 
-h1{
-    /* The logo text */
+h1
+{
     font-size:3.5em;
     padding:0.5em 0 0;
     text-transform:uppercase;
 }
 
-h3{
-    /* The slogan text */
-    font-family:forte,"Myriad Pro","Helvetica Neue",Helvetica,Arial,Sans-Serif;
+h3
+{
+    font-family:"Helvetica Neue",Helvetica,Arial,Sans-Serif;
     font-size:2em;
     font-weight:normal;
     margin:0 0 1em;
 }
 
 
-h2{
+h2
+{
     font-size:2.2em;
     font-weight:normal;
     letter-spacing:0.01em;
     text-transform:uppercase;
 }
 
-p{
+p
+{
     line-height:1.5em;
     padding-bottom:1em;
 }
 
 .line{
-    /* The dividing line: */
     height:1px;
     background-color:#24404c;
     border-bottom:1px solid #416371;
@@ -86,18 +90,20 @@ p{
     overflow:hidden;
 }
 
-article .line{
-    /* The dividing line inside of the article is darker: */
+article .line
+{
     background-color:#15242a;
     border-bottom-color:#204656;
     margin:1.3em 0;
 }
 
-footer .line{
+footer .line
+{
     margin:2em 0;
 }
 
-nav{
+nav
+{
     background:url(img/gradient_light.jpg) repeat-x 50% 50% #f8f8f8;
     padding:0 5px;
     position:absolute;
@@ -111,9 +117,8 @@ nav{
     box-shadow:0 1px 1px #333333;
 }
 
-/* The clearfix hack to clear the floats: */
-
-.clear:after{
+.clear:after
+{
     content: ".";
     display: block;
     height: 0;
@@ -121,9 +126,8 @@ nav{
     visibility: hidden;
 }
 
-/* The navigation styling: */
-
-nav ul li{
+nav ul li
+{
     display:inline;
 }
 
@@ -147,14 +151,12 @@ nav ul li a:hover
     background-color:#f0f0f0;
 }
 
-nav, article, nav ul li a,figure{
-    /* Applying CSS3 rounded corners: */
+nav, article, nav ul li a,figure
+{
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
     border-radius:10px;
 }
-
-/* Article styles: */
 
 #page
 {
@@ -194,14 +196,12 @@ figure img
     margin-left:-60px;
 }
 
-/* Footer styling: */
-
-footer{
+footer
+{
     margin-bottom:30px;
     text-align:center;
     font-size:0.825em;
 }
-
 
 footer p
 {
@@ -235,7 +235,7 @@ footer a.up
     float:right;
 }
 
-/*******************************************************/
+
 #header-group-id
 {
     clear:both;
@@ -261,9 +261,9 @@ footer a.up
     height: 500px;
 }
 
-/*Sencha*/
+/*** Sencha ***/
 .x-form-fieldset
 {
-        margin: 0 !important;
+    margin: 0 !important;
 }
 
