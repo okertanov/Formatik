@@ -249,7 +249,7 @@ function handle_api()
     echo $js_str;
 
     //Debug
-    dbg_out();
+    //dbg_out();
 }
 
 //
