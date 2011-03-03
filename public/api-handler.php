@@ -19,6 +19,45 @@ $ctx['sqlusername']     = 'formatik';
 $ctx['sqlpassword']     = '9sTrTBBnnMO';
 
 //
+// Authorization
+//
+function check_auth()
+{
+    global $ctx;
+    $rq = &$ctx['rq'];
+    $rs = &$ctx['rs'];
+    $ck = &$ctx['ck'];
+
+    try
+    {
+        $auth_cookie = explode(':', isset($ck['auth']) ? $ck['auth'] : '');
+        $rs['username'] = isset($auth_cookie[0]) ? $auth_cookie[0] : '';
+        $rs['password'] = isset($auth_cookie[1]) ? $auth_cookie[1] : '';
+        
+        if ( !strlen($rs['username']) or !strlen($rs['password']) )
+            e_throw('Username or password couldn\'t be empty.');
+
+        $sql_statement = sprintf('call check_auth("%s", "%s");', $rs['username'], $rs['password']);
+        $sql_result    = sql_execute($sql_statement) or 
+            e_throw( 'sql_execute error: ' . sql_get_error() );
+        $sql_data      = sql_get_data($sql_result) or 
+            e_throw( 'not authenticated' );
+        if ( isset($sql_data['authenticated']) and $sql_data['authenticated'])
+        {
+            return true;
+        }
+        sql_release_data($sql_result);
+
+        e_throw( 'not authenticated' );
+    }
+    catch(Exception $e)
+    {
+        throw $e; //return false;
+    }
+
+}
+
+//
 // API handlers
 // return json buffer
 //
@@ -99,6 +138,8 @@ function handle_catalog()
     
     try
     {
+        check_auth();
+
         $rs['name'] = ( isset($rq['name']) ? $rq['name'] : ( isset($ctx['urlparts'][3]) ? $ctx['urlparts'][3] : '' ) );
         $sql_statement = '';
         switch ($rs['name'])
@@ -166,6 +207,7 @@ function handle_api()
 
     //Initialize
     $ctx['endpoint'] = $_SERVER['PATH_INFO'];
+    $ctx['ck'] = $_COOKIE;
     $ctx['rq'] = $_REQUEST;
     $ctx['rs'] = array();
 

@@ -1,5 +1,6 @@
 Formatik TODO:
 --------------
+    [ ] Refactor with OOP
     [ ] Auth/Cookies
     [ ] Redirect/Enable/Disable unauthorized
     [x] Catalogs
