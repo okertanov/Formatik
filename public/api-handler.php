@@ -13,7 +13,7 @@ ini_set("display_errors", 1);
 // Globals
 //
 $ctx = array();
-$ctx['sqlhost']         = 'localhost'; 
+$ctx['sqlhost']         = 'p:localhost'; 
 $ctx['sqldb']           = 'formatikdb'; 
 $ctx['sqlusername']     = 'formatik';
 $ctx['sqlpassword']     = '9sTrTBBnnMO';
@@ -27,6 +27,7 @@ function check_auth()
     $rq = &$ctx['rq'];
     $rs = &$ctx['rs'];
     $ck = &$ctx['ck'];
+    $sql_result = 0;
 
     try
     {
@@ -42,16 +43,18 @@ function check_auth()
             e_throw( 'sql_execute error: ' . sql_get_error() );
         $sql_data      = sql_get_data($sql_result) or 
             e_throw( 'not authenticated' );
+        sql_release_data($sql_result);
         if ( isset($sql_data['authenticated']) and $sql_data['authenticated'])
         {
             return true;
         }
-        sql_release_data($sql_result);
 
         e_throw( 'not authenticated' );
     }
     catch(Exception $e)
     {
+        if ($sql_result) 
+            sql_release_data($sql_result);
         throw $e; //return false;
     }
 
@@ -80,6 +83,7 @@ function handle_auth()
     $rs['endpoint'] = $ctx['endpoint'];
     $rs['success']  = FALSE;
     $rs['msg']      = 'not authenticated';
+    $sql_result = 0;
     
     try
     {
@@ -104,6 +108,8 @@ function handle_auth()
     }
     catch(Exception $e)
     {
+        if ($sql_result) 
+            sql_release_data($sql_result);
         $rs['success']  = FALSE;
         $rs['msg']      = 'Exception: ' . $e->getMessage();
     }
@@ -135,10 +141,11 @@ function handle_catalog()
     $rs['endpoint'] = $ctx['endpoint'];
     $rs['success']  = FALSE;
     $rs['msg']      = 'empty';
+    $sql_result = 0;
     
     try
     {
-        //check_auth();
+        check_auth();
 
         $rs['name'] = ( isset($rq['name']) ? $rq['name'] : ( isset($ctx['urlparts'][3]) ? $ctx['urlparts'][3] : '' ) );
         $sql_statement = '';
@@ -180,6 +187,8 @@ function handle_catalog()
     }
     catch(Exception $e)
     {
+        if ($sql_result) 
+            sql_release_data($sql_result);
         $rs['success']  = FALSE;
         $rs['msg']      = 'Exception: ' . $e->getMessage();
     }
@@ -337,6 +346,7 @@ function sql_execute($sql)
 //
 function sql_get_data($res)
 {
+    global $ctx;
     return $res->fetch_array(MYSQLI_ASSOC);
 }
 
@@ -345,7 +355,12 @@ function sql_get_data($res)
 //
 function sql_release_data($res)
 {
-    $res->close();
+    global $ctx;
+    
+    while($ctx['sqlconn']->next_result()) 
+        $ctx['sqlconn']->store_result();
+    if ($res)
+        $res->close();
 }
 
 //
