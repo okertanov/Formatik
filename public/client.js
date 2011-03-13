@@ -235,7 +235,68 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                     }        
             });
         });
-    }       
+
+        //Set OnXXX handlers
+        var obj1 = Ext.getCmp('new_task_form').items.get(0).items.get(0); //form->fieldset(0)->field(0)
+        var obj2 = Ext.getCmp('new_task_form').items.get(0).items.get(1); //form->fieldset(0)->field(1)
+        var obj3 = Ext.getCmp('new_task_form').items.get(0).items.get(2); //form->fieldset(0)->field(2)
+        var obj4 = Ext.getCmp('new_task_form').items.get(0).items.get(3); //form->fieldset(0)->field(3)
+        var obj5 = Ext.getCmp('new_task_form').items.get(0).items.get(4); //form->fieldset(0)->field(4)
+        var obj6 = Ext.getCmp('new_task_form').items.get(0).items.get(5); //form->fieldset(0)->field(5)
+        if ( typeof(obj1) == 'object' )
+        {
+            obj1.on({
+                change: this.onChange,
+                select: this.onChange,
+                scope: this
+            });
+        }
+        if ( typeof(obj2) == 'object' )
+        {
+            obj2.on({
+                change: this.onChange,
+                select: this.onChange,
+                scope: this
+            });
+        }
+        if ( typeof(obj3) == 'object' )
+        {
+            obj3.on({
+                change: this.onChange,
+                select: this.onChange,
+                scope: this
+            });
+        }
+        if ( typeof(obj4) == 'object' )
+        {
+            obj4.on({
+                change: this.onChange,
+                select: this.onChange,
+                scope: this
+            });
+        }
+        if ( typeof(obj5) == 'object' )
+        {
+            obj5.on({
+                change: this.onChange,
+                select: this.onChange,
+                scope: this
+            });
+        }
+        if ( typeof(obj6) == 'object' )
+        {
+            obj6.on({
+                change: this.onChange,
+                select: this.onChange,
+                keyup:  this.onChange,
+                scope: this
+            });
+        }
+    },
+    onChange: function(field, value)
+    {
+        console.log('onChange event for: ', field, value);
+    }
 });
 
 Ext.regModel('Operator', 
