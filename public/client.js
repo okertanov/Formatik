@@ -19,7 +19,7 @@ Ext.setup(
 Ext.regModel('Order', 
 {
     fields: [   
-                'id', 'operator', 'direction', 'kind', 'category', 'package', 
+                'id', 'username', 'direction', 'kind', 'category', 'package', 
                 'weightclass', 'weight', 'numplaces', 'cost', 'waybill', 
                 'datetimereceived', 'datetimestamp', 'description'
             ]
@@ -296,6 +296,13 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
     onChange: function(field, value)
     {
         console.log('onChange event for: ', field, value);
+
+        var auth = GetLocalAuthConfig();
+        var my_form = Ext.getCmp('new_task_form');
+        my_form.order = Ext.ModelMgr.create({username: auth.username}, 'Order');
+        my_form.updateRecord(my_form.order);
+
+        console.log(my_form.order.data['direction']);
     }
 });
 
