@@ -249,7 +249,7 @@ create table if not exists `tariff`
         constraint foreign key(`place_id`) references `place`(`id`)           
             on delete restrict on update cascade,
         constraint foreign key(`transport_id`) references `transport`(`id`) 
-            on delete restrict on update cascade,
+            on delete restrict on update cascade
     )
     engine InnoDB 
     comment 'The tariff table is all about the price calculation rules.';
@@ -512,12 +512,12 @@ insert into `tariff` (`tariff_id`, `place_id`, `transport_id`, `delivery_days`,
                       `wr01`, `wr02`, `wr03`, `wr04`, `wr05`, `wr06`, `wr07`, `wr08`, `wr09`, `wr10`, `wr11`, `wo05`, 
                       `wr21`, `wr22`, `wr23`, `wr24`, `wr25`, `wr26`, `wr27`, `wr28`, `wr29`, `wr30`, `wr31`, `wr32`, `wr33`, `wo10`) values 
     (
-        1, 1, 1, ''
+        1, 1, 1, '',
         00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 
         00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00
     ),
     (
-        2, 1, 1, ''
+        2, 1, 1, '',
         00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 
         00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00
     );
