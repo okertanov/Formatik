@@ -20,7 +20,7 @@ Ext.regModel('Order',
 {
     fields: [   
                 'id', 'username', 'direction', 'kind', 'category', 'package', 
-                'weightclass', 'weight', 'numplaces', 'transport', 'cost'
+                'weightclass', 'weight', 'transport', 'numplaces', 'cost'
             ]
 });
 
@@ -125,17 +125,17 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         placeHolder: 'Вес отправления в кг'
                     },
                     {
+                        xtype: 'selectfield',
+                        name: 'transport',
+                        label: 'Вид доставки',
+                        placeHolder: 'Вид доставки отправления'
+                    },
+                    {
                         xtype: 'textfield',
                         name: 'numplaces',
                         label: 'Количество мест',
                         placeHolder: '1 место - 750 х 550 х 500 mm, вес 31,5 kg',
                         useClearIcon: true
-                    },
-                    {
-                        xtype: 'selectfield',
-                        name: 'transport',
-                        label: 'Вид доставки',
-                        placeHolder: 'Вид доставки отправления'
                     }
                 ]
             },
