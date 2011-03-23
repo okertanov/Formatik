@@ -539,3 +539,7 @@ insert into `tariff` (`tariff_id`, `place_id`, `transport_id`, `delivery_days`,
 --        because zyz_id whould refer to the one-to-one/many relation.
 -- 
 
+-- 
+--  TODO: Add stored procs: catalog_op_to_id
+-- 
+

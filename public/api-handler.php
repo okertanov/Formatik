@@ -166,6 +166,9 @@ function handle_catalog()
             case 'weightclasses':
                 $sql_statement = sprintf('call get_weightclasses;');
                 break;
+            case 'transport':
+                $sql_statement = sprintf('call get_transport;');
+                break;
             default:
                 e_throw('Catalog parameter is unknown.');
                 break;

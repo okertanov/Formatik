@@ -20,10 +20,17 @@ Ext.regModel('Order',
 {
     fields: [   
                 'id', 'username', 'direction', 'kind', 'category', 'package', 
-                'weightclass', 'weight', 'numplaces', 'cost', 'waybill', 
-                'datetimereceived', 'datetimestamp', 'description'
+                'weightclass', 'weight', 'numplaces', 'transport', 'cost'
             ]
 });
+
+Ext.regModel('Registration', 
+{
+    fields: [   
+                'waybill', 'datetimereceived', 'datetimestamp', 'description'
+            ]
+});
+
 
 Formatik.views.Tasks = Ext.extend(Ext.List, 
 {
@@ -123,6 +130,12 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         label: 'Количество мест',
                         placeHolder: '1 место - 750 х 550 х 500 mm, вес 31,5 kg',
                         useClearIcon: true
+                    },
+                    {
+                        xtype: 'selectfield',
+                        name: 'transport',
+                        label: 'Вид доставки',
+                        placeHolder: 'Вид доставки отправления'
                     }
                 ]
             },
@@ -203,7 +216,8 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
     initComponent: function() {
         Formatik.views.NewTask.superclass.initComponent.call(this);
         
-        [{id:0,name:'places'}, {id:1,name:'kinds'}, {id:2,name:'categories'}, {id:3,name:'packages'}, {id:4,name:'weightclasses'}].
+        [{id:0,name:'places'}, {id:1,name:'kinds'}, {id:2,name:'categories'}, 
+         {id:3,name:'packages'}, {id:4,name:'weightclasses'}, {id:5,name:'transport'}].
         forEach( function(el, idx, arr){
             Ext.Ajax.request({
                     url: '/api/catalog/' + el.name,
@@ -243,6 +257,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
         var obj4 = Ext.getCmp('new_task_form').items.get(0).items.get(3); //form->fieldset(0)->field(3)
         var obj5 = Ext.getCmp('new_task_form').items.get(0).items.get(4); //form->fieldset(0)->field(4)
         var obj6 = Ext.getCmp('new_task_form').items.get(0).items.get(5); //form->fieldset(0)->field(5)
+        var obj7 = Ext.getCmp('new_task_form').items.get(0).items.get(6); //form->fieldset(0)->field(5)
         if ( typeof(obj1) == 'object' )
         {
             obj1.on({
@@ -286,6 +301,15 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
         if ( typeof(obj6) == 'object' )
         {
             obj6.on({
+                change: this.onChange,
+                select: this.onChange,
+                keyup:  this.onChange,
+                scope: this
+            });
+        }
+        if ( typeof(obj7) == 'object' )
+        {
+            obj7.on({
                 change: this.onChange,
                 select: this.onChange,
                 keyup:  this.onChange,
