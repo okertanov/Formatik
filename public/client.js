@@ -585,6 +585,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
 
         /*Finalize UI*/
         this.baseUIOnAuthConfig( IsLocalAuthConfig(GetLocalAuthConfig()) );
+        this.baseUIOnAuthUserPanel( GetLocalAuthConfig() );
   },
     
   afterRender: function() {
@@ -638,6 +639,14 @@ Formatik.App = Ext.extend(Ext.Panel, {
         }
         this.updateToolbarTitle(this.tabs.getActiveItem().title);
     },
+    baseUIOnAuthUserPanel: function(auth) {
+        if ( IsLocalAuthConfig(auth) )
+        {
+            var username = auth.username;
+            this.toolbar.items.get(1).setOptions({'value':1, 'text': username});
+            this.toolbar.items.get(1).reset()
+        }
+    }
 
 });
 
