@@ -6,9 +6,9 @@
 Ext.ns('Formatik','Formatik.views','Formatik.cache','Formatik.stores');
 Ext.setup(
 {
-    icon: 'icon_lg.png',
-    tabletStartupScreen: 'echo10_tablet_startup.png',
-    phoneStartupScreen: 'echo10_phone_startup.png',
+    icon: 'icon.png',
+    tabletStartupScreen: 'tablet_startup.png',
+    phoneStartupScreen: 'phone_startup.png',
     glossOnIcon: true,
     statusBarStyle: 'black',
     onReady: function() {
@@ -199,7 +199,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                 [
                     {xtype: 'spacer'},
                     {
-                        text: 'Добавить',
+                        text: 'Оформить',
                         scope: this,
                         iconMask: true,
                         iconCls: 'add', 
@@ -412,6 +412,7 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                             my_form.reset();
                             my_form.load(my_form.operator);
                             ResetLocalAuthConfig();
+                            uiReloadDocument();
                         }
                     }, 
                     {
@@ -440,9 +441,9 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                                                 //4. Set address
                                                 my_form.operator.data['address'] = result.address || ''
                                                 my_form.load(my_form.operator);
-                                                //5. Set username on panel if succeeded otherwise raise an error with alert
 
-                                                //6. Reinit authorized UI
+                                                //5. Reinit authorized UI
+                                                uiReloadDocument();
                                             },
                                             failure: function(f, result) {
                                                 console.dir(result);
@@ -502,7 +503,7 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                 }        
             });
         }
-    }       
+    }
 });
 
 Formatik.views.Help = Ext.extend(Ext.Panel, {
@@ -548,8 +549,10 @@ Formatik.App = Ext.extend(Ext.Panel, {
             items: [
                 {xtype: 'spacer'}, 
                 {
+                    id: 'username-select-field',
                     xtype: 'selectfield',
                     name: 'operator',
+                    width: 180,
                     options: [
                         {text: '',  value: '0'},
                     ]
@@ -642,9 +645,10 @@ Formatik.App = Ext.extend(Ext.Panel, {
     baseUIOnAuthUserPanel: function(auth) {
         if ( IsLocalAuthConfig(auth) )
         {
-            var username = auth.username;
-            this.toolbar.items.get(1).setOptions({'value':1, 'text': username});
-            this.toolbar.items.get(1).reset()
+            var username = auth.username;    
+            var select_obj = Ext.getCmp('username-select-field');
+            select_obj.setOptions([{'value':1, 'text': username}]);
+            select_obj.reset();
         }
     }
 
@@ -714,6 +718,11 @@ function GetLocalAuthConfig()
 function IsLocalAuthConfig(auth)
 {
     return (auth.username.length && auth.password.length);
+}
+
+function uiReloadDocument() 
+{
+    window.location.href = window.location.href;
 }
 /**************************************************/
 
