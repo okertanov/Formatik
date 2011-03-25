@@ -312,7 +312,7 @@ create procedure get_places()
 --  Procedure: get_places_op2id
 --  
 drop procedure if exists get_places_op2id//
-create procedure get_places_op2id(IN op)
+create procedure get_places_op2id(IN op int)
     reads sql data
     comment 'Option to Id for places.'
     begin
@@ -325,7 +325,7 @@ create procedure get_places_op2id(IN op)
 --  Procedure: get_places_id2op
 --  
 drop procedure if exists get_places_id2op//
-create procedure get_places_id2op(IN id)
+create procedure get_places_id2op(IN id int)
     reads sql data
     comment 'Id to Option for places.'
     begin
