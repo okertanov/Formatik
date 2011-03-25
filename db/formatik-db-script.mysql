@@ -59,13 +59,13 @@ create table if not exists `operator`
 create table if not exists `place`
     (
         `id`            int not null primary key auto_increment,
-        `place_id`      int unique not null default 0,
+        `place_op`      int unique not null default 0,
         `name`          varchar(256) not null default '',
         `city`          varchar(256) not null default '',
         `country`       varchar(256) not null default '',
         `geo`           varchar(64)  not null default '',
         `description`   varchar(512) not null default '',
-        index(place_id)
+        index(place_op)
     )
     engine InnoDB
     comment 'The place table stores cities list.';
@@ -76,10 +76,10 @@ create table if not exists `place`
 create table if not exists `kind`
     (
         `id`            int not null primary key auto_increment,
-        `kind_id`       int unique not null default 0,
+        `kind_op`       int unique not null default 0,
         `name`          varchar(256) not null default '',
         `description`   varchar(512) not null default '',
-        index(`kind_id`)
+        index(`kind_op`)
     )
     engine InnoDB 
     comment 'The kind table is a kinda kindly kind.';
@@ -90,10 +90,10 @@ create table if not exists `kind`
 create table if not exists `category`
     (
         `id`            int not null primary key auto_increment,
-        `category_id`   int unique not null default 0,
+        `category_op`   int unique not null default 0,
         `name`          varchar(256) not null default '',
         `description`   varchar(512) not null default '',
-        index(`category_id`)
+        index(`category_op`)
     )
     engine InnoDB 
     comment 'The category table stores categories list indeed.';
@@ -104,10 +104,10 @@ create table if not exists `category`
 create table if not exists `package`
     (
         `id`            int not null primary key auto_increment,
-        `package_id`    int unique not null default 0,
+        `package_op`    int unique not null default 0,
         `name`          varchar(256) not null default '',
         `description`   varchar(512) not null default '',
-        index(`package_id`)
+        index(`package_op`)
     )
     engine InnoDB 
     comment 'The package table stores packages information.';
@@ -118,10 +118,10 @@ create table if not exists `package`
 create table if not exists `weightclass`
     (
         `id`             int not null primary key auto_increment,
-        `weightclass_id` int unique not null default 0,
+        `weightclass_op` int unique not null default 0,
         `name`           varchar(256) not null default '',
         `description`    varchar(512) not null default '',
-        index(`weightclass_id`)
+        index(`weightclass_op`)
     )
     engine InnoDB 
     comment 'The weightclass table stores weightclass classifiers.';
@@ -132,10 +132,10 @@ create table if not exists `weightclass`
 create table if not exists `transport`
     (
         `id`             int not null primary key auto_increment,
-        `transport_id`   int unique not null default 0,
+        `transport_op`   int unique not null default 0,
         `name`           varchar(256) not null default '',
         `description`    varchar(512) not null default '',
-        index(`transport_id`)
+        index(`transport_op`)
     )
     engine InnoDB 
     comment 'The transport table stores transportation kind classifiers.';
@@ -213,7 +213,7 @@ create table if not exists `order`
 create table if not exists `tariff`
     (
         `id`                int not null primary key auto_increment,
-        `tariff_id`         int not null default 0, 
+        `tariff_op`         int not null default 0, 
         `place_id`          int not null default 0, 
         `transport_id`      int not null default 0,  
         `delivery_days`     varchar(16)  not null default '',
@@ -243,7 +243,7 @@ create table if not exists `tariff`
         `wr32`              decimal(10,2) not null default 00000000.00, 
         `wr33`              decimal(10,2) not null default 00000000.00, 
         `wo10`              decimal(10,2) not null default 00000000.00, 
-        index(`tariff_id`),
+        index(`tariff_op`),
         index(`place_id`),
         index(`transport_id`),
         constraint foreign key(`place_id`) references `place`(`id`)           
@@ -303,9 +303,9 @@ create procedure get_places()
     reads sql data
     comment 'Retreives places.'
     begin
-        select p.`place_id` as cid, p.`name` as cname
+        select p.`place_op` as cop, p.`name` as cname
         from `place` p
-        order by p.`place_id`;
+        order by p.`place_op`;
     end//
 
 --  
@@ -316,9 +316,9 @@ create procedure get_kinds()
     reads sql data
     comment 'Retreives kinds.'
     begin
-        select k.`kind_id` as cid, k.`name` as cname
+        select k.`kind_op` as cop, k.`name` as cname
         from `kind` k
-        order by k.`kind_id`;
+        order by k.`kind_op`;
     end//
 
 --  
@@ -329,9 +329,9 @@ create procedure get_categories()
     reads sql data
     comment 'Retreives categories.'
     begin
-        select c.`category_id` as cid, c.`name` as cname
+        select c.`category_op` as cop, c.`name` as cname
         from `category` c
-        order by c.`category_id`;
+        order by c.`category_op`;
     end//
 
 --  
@@ -342,9 +342,9 @@ create procedure get_packages()
     reads sql data
     comment 'Retreives packages.'
     begin
-        select p.`package_id` as cid, p.`name` as cname
+        select p.`package_op` as cop, p.`name` as cname
         from `package` p
-        order by p.`package_id`;
+        order by p.`package_op`;
     end//
 
 --  
@@ -355,9 +355,9 @@ create procedure get_weightclasses()
     reads sql data
     comment 'Retreives weightclasses.'
     begin
-        select w.`weightclass_id` as cid, w.`name` as cname
+        select w.`weightclass_op` as cop, w.`name` as cname
         from `weightclass` w
-        order by w.`weightclass_id`;
+        order by w.`weightclass_op`;
     end//
 
 --  
@@ -368,9 +368,9 @@ create procedure get_transports()
     reads sql data
     comment 'Retreives transports.'
     begin
-        select w.`transport_id` as cid, w.`name` as cname
+        select w.`transport_op` as cop, w.`name` as cname
         from `transport` w
-        order by w.`transport_id`;
+        order by w.`transport_op`;
     end//
 
 delimiter ;
@@ -386,31 +386,31 @@ insert into `operator` (`username`, `password`, `address`, `phone`, `isadmin`, `
     ('okertanov', MD5('fmQAZ'),     'Riga, Latvia, LV-1012',                    '+37125864676', true,  'The developer of the system.'),
     ('nata',      MD5('fm1234567'), 'Riga, Latvia, LV-1012',                    '+37127700257', true,  'Main system operator.'),
     ('PKS',       MD5('fmPKS'),     'Akademijas laukums 1, Riga',               '+37167320148', false, 'Admin Operator'),
-    ('AL1',       MD5('fmAL1'),     'TC Alfa, Brīvības 372, Riga',              '+37167076480', false, 'TC Alfa Operator 1'),
-    ('AL2',       MD5('fmAL2'),     'TC Alfa, Brīvības 372, Riga',              '+37167076480', false, 'TC Alfa Operator 2'),
+    ('AL1',       MD5('fmAL1'),     'TC Alfa, Brivibas 372, Riga',              '+37167076480', false, 'TC Alfa Operator 1'),
+    ('AL2',       MD5('fmAL2'),     'TC Alfa, Brivibas 372, Riga',              '+37167076480', false, 'TC Alfa Operator 2'),
     ('ML1',       MD5('fmML1'),     'TC Mols, Krasta 46, Riga',                 '+37167030388', false, 'TC Mols Operator 1'),
     ('ML2',       MD5('fmML2'),     'TC Mols, Krasta 46, Riga',                 '+37167030388', false, 'TC Mols Operator 2'),
     ('OR1',       MD5('fmOR1'),     'TC Origo, Stacijas laukums 4, Riga',       '+37167073039', false, 'TC Origo Operator 1'),
     ('OR2',       MD5('fmOR2'),     'TC Origo, Stacijas laukums 4, Riga',       '+37167073039', false, 'TC Origo Operator 2'),
-    ('GC1',       MD5('fmGC1'),     'TC Galerija centrs,Audēju 16, Riga',       '+37167104547', false, 'TC Galerija centrs Operator 1'),
-    ('GC2',       MD5('fmGC2'),     'TC Galerija centrs,Audēju 16, Riga',       '+37167104547', false, 'TC Galerija centrs Operator 2'),
-    ('OL1',       MD5('fmOL1'),     'TC Olympia, Āzenes 5, Riga',               '+37167065744', false, 'TC Olympia Operator 1'),
-    ('OL2',       MD5('fmOL2'),     'TC Olympia, Āzenes 5, Riga',               '+37167065744', false, 'TC Olympia Operator 2'),
+    ('GC1',       MD5('fmGC1'),     'TC Galerija centrs,Audeju 16, Riga',       '+37167104547', false, 'TC Galerija centrs Operator 1'),
+    ('GC2',       MD5('fmGC2'),     'TC Galerija centrs,Audeju 16, Riga',       '+37167104547', false, 'TC Galerija centrs Operator 2'),
+    ('OL1',       MD5('fmOL1'),     'TC Olympia, Azenes 5, Riga',               '+37167065744', false, 'TC Olympia Operator 1'),
+    ('OL2',       MD5('fmOL2'),     'TC Olympia, Azenes 5, Riga',               '+37167065744', false, 'TC Olympia Operator 2'),
     ('SP1',       MD5('fmSP1'),     'TC Spice, Lielirbes 29, Riga',             '+37167612580', false, 'TC Spice Operator 1'),
     ('SP2',       MD5('fmSP2'),     'TC Spice, Lielirbes 29, Riga',             '+37167612580', false, 'TC Spice Operator 2'),
-    ('MI1',       MD5('fmMI1'),     'TC Minsk, Nīcgales 2, Riga',               '+37167562217', false, 'TC Minsk Operator 1'),
-    ('MI2',       MD5('fmMI2'),     'TC Minsk, Nīcgales 2, Riga',               '+37167562217', false, 'TC Minsk Operator 2'),
+    ('MI1',       MD5('fmMI1'),     'TC Minsk, Nicgales 2, Riga',               '+37167562217', false, 'TC Minsk Operator 1'),
+    ('MI2',       MD5('fmMI2'),     'TC Minsk, Nicgales 2, Riga',               '+37167562217', false, 'TC Minsk Operator 2'),
     ('RI1',       MD5('fmRI1'),     'TC Rimi, Deglava 110, Riga',               '+37167572200', false, 'TC Rimi Operator 1'),
     ('RI2',       MD5('fmRI2'),     'TC Rimi, Deglava 110, Riga',               '+37167572200', false, 'TC Rimi Operator 2'),
     ('DO1',       MD5('fmDO1'),     'TC Dole, Maskavas 367, Riga',              '+37167106600', false, 'TC Dole Operator 1'),
     ('DO2',       MD5('fmDO2'),     'TC Dole, Maskavas 367, Riga',              '+37167106600', false, 'TC Dole Operator 2'),
-    ('DS1',       MD5('fmDS1'),     'Centrālajā dzelzceļa stacijā, tunelis B',  '+37167073034', false, 'Dzelzceļa stacijā Operator 1'),
-    ('DS2',       MD5('fmDS2'),     'Centrālajā dzelzceļa stacijā, tunelis B',  '+37167073034', false, 'Dzelzceļa stacijā Operator 2');
+    ('DS1',       MD5('fmDS1'),     'Centralaja dzelzcela stacija, tunelis B',  '+37167073034', false, 'Dzelzcela stacija Operator 1'),
+    ('DS2',       MD5('fmDS2'),     'Centralaja dzelzcela stacija, tunelis B',  '+37167073034', false, 'Dzelzcela stacija Operator 2');
 
 -- 
 --  Data: place 
 -- 
-insert into `place` (`place_id`, `name`, `city`, `country`, `geo`, `description`) values 
+insert into `place` (`place_op`, `name`, `city`, `country`, `geo`, `description`) values 
     (1,   'Austria',     '',         'Austria', '', ''), 
     (2,   'Belgium',     '',         'Belgium', '', ''), 
     (3,   'Bulgaria',    '',         'Bulgaria', '', ''), 
@@ -459,13 +459,13 @@ insert into `place` (`place_id`, `name`, `city`, `country`, `geo`, `description`
     (46,  'Kyrgyzstan, Bishkek',     'Bishkek',  'Kyrgyzstan', '', ''), 
     (47,  'Tajikistan, Dushanbe',    'Dushanbe', 'Tajikistan', '', ''), 
     (48,  'Turkmenistan, Ashgabat',  'Ashgabat', 'Turkmenistan', '', ''), 
-    (99,  'Citāds',      'Other',    'Nowhere', '00.0000,00.0000', 
+    (99,  'Citads',      'Other',    'Nowhere', '00.0000,00.0000', 
                                      'Unknown or special place to deliver a package.');
 
 -- 
 --  Data: kind 
 -- 
-insert into `kind` (`kind_id`, `name`, `description`) values 
+insert into `kind` (`kind_op`, `name`, `description`) values 
     (1,     'Документы',            'Вид отправления: Документы (+0 к базовому тарифу)'),
     (2,     'Личные документы',     'Вид отправления: Личные документы (+10 к базовому тарифу)'),
     (3,     'Товар',                'Вид отправления: Товар (+10 lvl к базовому тарифу)');
@@ -473,8 +473,8 @@ insert into `kind` (`kind_id`, `name`, `description`) values
 -- 
 --  Data: category 
 -- 
-insert into `category` (`category_id`, `name`, `description`) values 
-    (1,     'Biznesa klasē',        '(+0 к базовому тарифу)'),
+insert into `category` (`category_op`, `name`, `description`) values 
+    (1,     'Biznesa klase',        '(+0 к базовому тарифу)'),
     (2,     'OFF TIME',             '(*2 к базовому тарифу)'),
     (3,     'Stingri uz rokas',     '(*2 к базовому тарифу)'),
     (4,     'Ekspress',             '(*2 к базовому тарифу)');
@@ -482,7 +482,7 @@ insert into `category` (`category_id`, `name`, `description`) values
 -- 
 --  Data: package 
 -- 
-insert into `package` (`package_id`, `name`, `description`) values 
+insert into `package` (`package_op`, `name`, `description`) values 
     (1,     'Письмо',               '(до 270 х 350 мм и  0,3 кг максимум)'),
     (2,     'Пакет',                '(до 370 х 410 мм и 5 кг максимум)'), 
     (3,     'Посылка',              '(до 750 х 550 x 500 мм и 31.5 кг максимум)');
@@ -490,7 +490,7 @@ insert into `package` (`package_id`, `name`, `description`) values
 -- 
 --  Data: weightclass 
 -- 
-insert into `weightclass` (`weightclass_id`, `name`, `description`) values 
+insert into `weightclass` (`weightclass_op`, `name`, `description`) values 
     (1,     'Lidz 200 g',           ''),
     (2,     '0,200 g - 0,500 g',    ''), 
     (3,     '0,501 g - 1 kg',       ''), 
@@ -501,14 +501,14 @@ insert into `weightclass` (`weightclass_id`, `name`, `description`) values
 -- 
 --  Data: transport
 -- 
-insert into `transport` (`transport_id`, `name`, `description`) values 
+insert into `transport` (`transport_op`, `name`, `description`) values 
     (1,     'Auto',                 ''),
     (2,     'Avia',                 '');
 
 -- 
 --  TODO: Data: tariff
 -- 
-insert into `tariff` (`tariff_id`, `place_id`, `transport_id`, `delivery_days`, 
+insert into `tariff` (`tariff_op`, `place_id`, `transport_id`, `delivery_days`, 
                       `wr01`, `wr02`, `wr03`, `wr04`, `wr05`, `wr06`, `wr07`, `wr08`, `wr09`, `wr10`, `wr11`, `wo05`, 
                       `wr21`, `wr22`, `wr23`, `wr24`, `wr25`, `wr26`, `wr27`, `wr28`, `wr29`, `wr30`, `wr31`, `wr32`, `wr33`, `wo10`) values 
     (
@@ -523,20 +523,17 @@ insert into `tariff` (`tariff_id`, `place_id`, `transport_id`, `delivery_days`,
     );
 
 -- 
---  TODO: Test Data: order
+--  TODO: To add test data for the order & registration tables.
 -- 
 
 -- 
---  TODO: Test Data: registration
+--  TODO: Visualize database structure & field comments.
 -- 
 
 -- 
---  TODO: Visual database structure & field comments
--- 
-
--- 
---  TODO: Rename xyz_id to _op(means option number) for the catalogs, 
+--  DONE: Rename xyz_id to _op(means option number) for the catalogs, 
 --        because zyz_id whould refer to the one-to-one/many relation.
+--        NOW _id is the refernece, _op is the frontend's option.
 -- 
 
 -- 

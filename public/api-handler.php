@@ -180,7 +180,7 @@ function handle_catalog()
         while( $sql_data = sql_get_data($sql_result) )
         {
             $rs[$rs['name']][] = array(
-                                            'value' => $sql_data['cid'],
+                                            'value' => $sql_data['cop'],
                                             'text'  => $sql_data['cname']
                                       );
             $rs['success']  = TRUE;
