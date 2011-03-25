@@ -348,6 +348,32 @@ create procedure get_kinds()
     end//
 
 --  
+--  Procedure: get_kinds_op2id
+--  
+drop procedure if exists get_kinds_op2id//
+create procedure get_kinds_op2id(IN op int)
+    reads sql data
+    comment 'Option to Id for kinds.'
+    begin
+        select p.`id` as id
+        from `kind` p
+        where p.`kind_op` = op;
+    end//
+
+--  
+--  Procedure: get_kinds_id2op
+--  
+drop procedure if exists get_kinds_id2op//
+create procedure get_kinds_id2op(IN id int)
+    reads sql data
+    comment 'Id to Option for kinds.'
+    begin
+        select p.`kind_op` as op
+        from `kind` p
+        where p.`id` = id;
+    end//
+
+--  
 --  Procedure: get_categories
 --  
 drop procedure if exists get_categories//
