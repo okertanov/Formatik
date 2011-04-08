@@ -1,8 +1,8 @@
 Formatik TODO:
 --------------
-    [ ] Refactor with OOP
-    [ ] Auth/Cookies
-    [ ] Redirect/Enable/Disable unauthorized
+    [x] Refactor with OOP
+    [x] Auth/Cookies
+    [x] Redirect/Enable/Disable unauthorized
     [x] Catalogs
     [ ] Two steps order
     [ ] Post order
@@ -14,5 +14,5 @@ Formatik TODO:
     [ ] Alive monitoring/Heartbeat/Timers
     [ ] Code review/Security
     [ ] Tests
-    [ ] Deployment 
+    [ ] Deployment
 

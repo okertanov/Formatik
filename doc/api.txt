@@ -12,7 +12,7 @@ Action php-api-handler-v1 /api-handler.php virtual
 <Location /api>
     SetHandler php-api-handler-v1
 </Location>
-    
+
 1. Endpoints
 ------------
     1.1   GET   /api/ping
@@ -42,7 +42,7 @@ Action php-api-handler-v1 /api-handler.php virtual
                             RQ: '{ Task properties, ... }'
                             RS: '{ "endpoint":"/api/newtask", "success":true, "msg":"created" }'
 
-    1.7   POST  /api/settask 
+    1.7   POST  /api/settask
                             RQ: '{ "status":"new" || "status":"accepted" }'
                             RS: '{ "endpoint":"/api/settask", "success":true, "msg":"modified" }'
 
@@ -54,7 +54,7 @@ Action php-api-handler-v1 /api-handler.php virtual
                             RQ: '{}'
                             RS: '{ "endpoint":"/api/catalog", "success":true, "msg":"list", [All Catalogs list] }'
 
-    1.10  GET   /api/catalog?catalog=name 
+    1.10  GET   /api/catalog?catalog=name
                             RQ: '{}'
                             RS: '{ "endpoint":"/api/catalog", "success":true, "msg":"list", ['Name' Catalog items] }'
                             RF: '{ "endpoint":"/api/catalog", "success":true, "msg":"empty" }'

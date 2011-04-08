@@ -10,33 +10,33 @@
 --  ---------------------------------------------------------
 
 -- 
---  Cleanup 
+--  Cleanup
 -- 
 drop database if exists `formatikdb`;
 
 -- 
---  Database: formatikdb 
+--  Database: formatikdb
 -- 
-create database if not exists `formatikdb` 
+create database if not exists `formatikdb`
     default character set = utf8
     default collate = utf8_general_ci;
 
 use formatikdb;
 
 -- 
---  User: formatik@localhost 
+--  User: formatik@localhost
 -- 
 grant usage on `formatikdb`.* to `formatik`@`localhost`;
 drop user `formatik`@`localhost`;
 
-create user `formatik`@`localhost` 
+create user `formatik`@`localhost`
     identified by '9sTrTBBnnMO';
 
 grant all privileges on `formatikdb`.* to `formatik`@`localhost`
     with grant option;
 
 -- 
---  Table: operator 
+--  Table: operator
 -- 
 create table if not exists `operator`
     (
@@ -50,11 +50,11 @@ create table if not exists `operator`
         index(`username`),
         index(`isadmin`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The operator table is used to authenticate the operators.';
 
 -- 
---  Table: place 
+--  Table: place
 -- 
 create table if not exists `place`
     (
@@ -71,7 +71,7 @@ create table if not exists `place`
     comment 'The place table stores cities list.';
 
 -- 
---  Table: kind 
+--  Table: kind
 -- 
 create table if not exists `kind`
     (
@@ -81,11 +81,11 @@ create table if not exists `kind`
         `description`   varchar(512) not null default '',
         index(`kind_op`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The kind table is a kinda kindly kind.';
 
 -- 
---  Table: category 
+--  Table: category
 -- 
 create table if not exists `category`
     (
@@ -95,11 +95,11 @@ create table if not exists `category`
         `description`   varchar(512) not null default '',
         index(`category_op`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The category table stores categories list indeed.';
 
 -- 
---  Table: package 
+--  Table: package
 -- 
 create table if not exists `package`
     (
@@ -109,11 +109,11 @@ create table if not exists `package`
         `description`   varchar(512) not null default '',
         index(`package_op`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The package table stores packages information.';
 
 -- 
---  Table: weightclass 
+--  Table: weightclass
 -- 
 create table if not exists `weightclass`
     (
@@ -123,7 +123,7 @@ create table if not exists `weightclass`
         `description`    varchar(512) not null default '',
         index(`weightclass_op`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The weightclass table stores weightclass classifiers.';
 
 -- 
@@ -137,11 +137,11 @@ create table if not exists `transport`
         `description`    varchar(512) not null default '',
         index(`transport_op`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The transport table stores transportation kind classifiers.';
 
 -- 
---  Table: registration 
+--  Table: registration
 -- 
 create table if not exists `registration`
     (
@@ -155,30 +155,30 @@ create table if not exists `registration`
         `datetimereceived` varchar(64)  not null default '',
         `datetimestamp`    timestamp default now(),
         `description`      varchar(512) not null default '',
-        index(`waybill_nr`), 
+        index(`waybill_nr`),
         index(`datetimereceived`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The registartion table stores registration attributes.';
 
 -- 
---  Table: order 
+--  Table: order
 -- 
 create table if not exists `order`
     (
         `id`               int not null primary key auto_increment,
-        `operator_id`      int not null default 0, 
-        `place_id`         int not null default 0, 
-        `kind_id`          int not null default 0, 
-        `category_id`      int not null default 0, 
-        `package_id`       int not null default 0, 
-        `weightclass_id`   int not null default 0,  
-        `transport_id`     int not null default 0,  
-        `registration_id`  int not null default 0, 
-        `numplaces`        int not null default 0, 
-        `weight`           decimal(10,3) not null default 0000000.000, 
-        `evaluated_cost`   decimal(10,2) not null default 00000000.00, 
-        `calculated_cost`  decimal(10,2) not null default 00000000.00, 
+        `operator_id`      int not null default 0,
+        `place_id`         int not null default 0,
+        `kind_id`          int not null default 0,
+        `category_id`      int not null default 0,
+        `package_id`       int not null default 0,
+        `weightclass_id`   int not null default 0,
+        `transport_id`     int not null default 0,
+        `registration_id`  int not null default 0,
+        `numplaces`        int not null default 0,
+        `weight`           decimal(10,3) not null default 0000000.000,
+        `evaluated_cost`   decimal(10,2) not null default 00000000.00,
+        `calculated_cost`  decimal(10,2) not null default 00000000.00,
         `datetimestamp`    timestamp default now(),
         `processed`        bool not null default false,
         `description`      varchar(512) not null default '',
@@ -187,24 +187,24 @@ create table if not exists `order`
         index(`registration_id`),
         index(`datetimestamp`),
         index(`processed`),
-        constraint foreign key(`operator_id`) references `operator`(`id`)           
+        constraint foreign key(`operator_id`) references `operator`(`id`)
             on delete restrict on update cascade,
-        constraint foreign key(`place_id`) references `place`(`id`)           
+        constraint foreign key(`place_id`) references `place`(`id`)
             on delete restrict on update cascade,
-        constraint foreign key(`kind_id`) references `kind`(`id`)                      
+        constraint foreign key(`kind_id`) references `kind`(`id`)
             on delete restrict on update cascade,
-        constraint foreign key(`category_id`) references `category`(`id`)          
+        constraint foreign key(`category_id`) references `category`(`id`)
             on delete restrict on update cascade,
-        constraint foreign key(`package_id`) references `package`(`id`)             
+        constraint foreign key(`package_id`) references `package`(`id`)
             on delete restrict on update cascade,
-        constraint foreign key(`weightclass_id`) references `weightclass`(`id`) 
+        constraint foreign key(`weightclass_id`) references `weightclass`(`id`)
             on delete restrict on update cascade,
         constraint foreign key(`transport_id`) references `transport`(`id`)
             on delete restrict on update cascade,
-        constraint foreign key(`registration_id`) references `registration`(`id`) 
+        constraint foreign key(`registration_id`) references `registration`(`id`)
             on delete restrict on update cascade
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The order table is all about the orders.';
 
 -- 
@@ -213,45 +213,45 @@ create table if not exists `order`
 create table if not exists `tariff`
     (
         `id`                int not null primary key auto_increment,
-        `tariff_op`         int not null default 0, 
-        `place_id`          int not null default 0, 
-        `transport_id`      int not null default 0,  
+        `tariff_op`         int not null default 0,
+        `place_id`          int not null default 0,
+        `transport_id`      int not null default 0,
         `delivery_days`     varchar(16)  not null default '',
-        `wr01`              decimal(10,2) not null default 00000000.00, 
-        `wr02`              decimal(10,2) not null default 00000000.00, 
-        `wr03`              decimal(10,2) not null default 00000000.00, 
-        `wr04`              decimal(10,2) not null default 00000000.00, 
-        `wr05`              decimal(10,2) not null default 00000000.00, 
-        `wr06`              decimal(10,2) not null default 00000000.00, 
-        `wr07`              decimal(10,2) not null default 00000000.00, 
-        `wr08`              decimal(10,2) not null default 00000000.00, 
-        `wr09`              decimal(10,2) not null default 00000000.00, 
-        `wr10`              decimal(10,2) not null default 00000000.00, 
-        `wr11`              decimal(10,2) not null default 00000000.00, 
-        `wo05`              decimal(10,2) not null default 00000000.00, 
-        `wr21`              decimal(10,2) not null default 00000000.00, 
-        `wr22`              decimal(10,2) not null default 00000000.00, 
-        `wr23`              decimal(10,2) not null default 00000000.00, 
-        `wr24`              decimal(10,2) not null default 00000000.00, 
-        `wr25`              decimal(10,2) not null default 00000000.00, 
-        `wr26`              decimal(10,2) not null default 00000000.00, 
-        `wr27`              decimal(10,2) not null default 00000000.00, 
-        `wr28`              decimal(10,2) not null default 00000000.00, 
-        `wr29`              decimal(10,2) not null default 00000000.00, 
-        `wr30`              decimal(10,2) not null default 00000000.00, 
-        `wr31`              decimal(10,2) not null default 00000000.00, 
-        `wr32`              decimal(10,2) not null default 00000000.00, 
-        `wr33`              decimal(10,2) not null default 00000000.00, 
-        `wo10`              decimal(10,2) not null default 00000000.00, 
+        `wr01`              decimal(10,2) not null default 00000000.00,
+        `wr02`              decimal(10,2) not null default 00000000.00,
+        `wr03`              decimal(10,2) not null default 00000000.00,
+        `wr04`              decimal(10,2) not null default 00000000.00,
+        `wr05`              decimal(10,2) not null default 00000000.00,
+        `wr06`              decimal(10,2) not null default 00000000.00,
+        `wr07`              decimal(10,2) not null default 00000000.00,
+        `wr08`              decimal(10,2) not null default 00000000.00,
+        `wr09`              decimal(10,2) not null default 00000000.00,
+        `wr10`              decimal(10,2) not null default 00000000.00,
+        `wr11`              decimal(10,2) not null default 00000000.00,
+        `wo05`              decimal(10,2) not null default 00000000.00,
+        `wr21`              decimal(10,2) not null default 00000000.00,
+        `wr22`              decimal(10,2) not null default 00000000.00,
+        `wr23`              decimal(10,2) not null default 00000000.00,
+        `wr24`              decimal(10,2) not null default 00000000.00,
+        `wr25`              decimal(10,2) not null default 00000000.00,
+        `wr26`              decimal(10,2) not null default 00000000.00,
+        `wr27`              decimal(10,2) not null default 00000000.00,
+        `wr28`              decimal(10,2) not null default 00000000.00,
+        `wr29`              decimal(10,2) not null default 00000000.00,
+        `wr30`              decimal(10,2) not null default 00000000.00,
+        `wr31`              decimal(10,2) not null default 00000000.00,
+        `wr32`              decimal(10,2) not null default 00000000.00,
+        `wr33`              decimal(10,2) not null default 00000000.00,
+        `wo10`              decimal(10,2) not null default 00000000.00,
         index(`tariff_op`),
         index(`place_id`),
         index(`transport_id`),
-        constraint foreign key(`place_id`) references `place`(`id`)           
+        constraint foreign key(`place_id`) references `place`(`id`)
             on delete restrict on update cascade,
-        constraint foreign key(`transport_id`) references `transport`(`id`) 
+        constraint foreign key(`transport_id`) references `transport`(`id`)
             on delete restrict on update cascade
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The tariff table is all about the price calculation rules.';
 
 -- 
@@ -260,33 +260,33 @@ create table if not exists `tariff`
 create table if not exists `audit`
     (
         `id`                int not null primary key auto_increment,
-        `operator_id`       int not null default 0, 
+        `operator_id`       int not null default 0,
         `operator_auth_key` varchar(64) not null default '', -- [auth] => user:a1bf87eacb8f771e4add729714391b71
         `operator_api_key`  varchar(64) not null default '', -- [FormatikAPI] => 8lq8cqid77s4c8rakgd59sabo6
-        `operator_api_cmd`  varchar(64) not null default '', 
-        `operator_api_data` varchar(64) not null default '', 
+        `operator_api_cmd`  varchar(64) not null default '',
+        `operator_api_data` varchar(64) not null default '',
         `datetimestamp`     timestamp default now(),
-        index(`operator_id`), 
+        index(`operator_id`),
         index(`datetimestamp`)
     )
-    engine InnoDB 
+    engine InnoDB
     comment 'The audit table is all about the operators activity.';
 
 --  ---------------------------------------------------------
---  Stored procedures 
+--  Stored procedures
 --  ---------------------------------------------------------
 
-delimiter // 
+delimiter //
 
---  
---  Procedure: check_auth 
---  
+-- 
+--  Procedure: check_auth
+-- 
 drop procedure if exists check_auth//
 create procedure check_auth(IN usr varchar(64), IN pwd varchar(64))
     reads sql data
     comment 'Checks auth credintals on the given parameters.'
     begin
-        select o.`username`, o.`password`, o.`address`, o.`phone`, o.`isadmin`, o.`description`, 
+        select o.`username`, o.`password`, o.`address`, o.`phone`, o.`isadmin`, o.`description`,
                 (strcmp(o.`password`, pwd) = 0) as authenticated
         from `operator` o
         where ( usr <> '' and pwd <> '' ) and
@@ -295,9 +295,9 @@ create procedure check_auth(IN usr varchar(64), IN pwd varchar(64))
         order by authenticated;
     end//
 
---  
+-- 
 --  Procedure: get_places
---  
+-- 
 drop procedure if exists get_places//
 create procedure get_places()
     reads sql data
@@ -308,9 +308,9 @@ create procedure get_places()
         order by p.`place_op`;
     end//
 
---  
+-- 
 --  Procedure: get_places_op2id
---  
+-- 
 drop procedure if exists get_places_op2id//
 create procedure get_places_op2id(IN op int)
     reads sql data
@@ -321,9 +321,9 @@ create procedure get_places_op2id(IN op int)
         where p.`place_op` = op;
     end//
 
---  
+-- 
 --  Procedure: get_places_id2op
---  
+-- 
 drop procedure if exists get_places_id2op//
 create procedure get_places_id2op(IN id int)
     reads sql data
@@ -334,9 +334,9 @@ create procedure get_places_id2op(IN id int)
         where p.`id` = id;
     end//
 
---  
+-- 
 --  Procedure: get_kinds
---  
+-- 
 drop procedure if exists get_kinds//
 create procedure get_kinds()
     reads sql data
@@ -347,9 +347,9 @@ create procedure get_kinds()
         order by k.`kind_op`;
     end//
 
---  
+-- 
 --  Procedure: get_kinds_op2id
---  
+-- 
 drop procedure if exists get_kinds_op2id//
 create procedure get_kinds_op2id(IN op int)
     reads sql data
@@ -360,9 +360,9 @@ create procedure get_kinds_op2id(IN op int)
         where p.`kind_op` = op;
     end//
 
---  
+-- 
 --  Procedure: get_kinds_id2op
---  
+-- 
 drop procedure if exists get_kinds_id2op//
 create procedure get_kinds_id2op(IN id int)
     reads sql data
@@ -373,9 +373,9 @@ create procedure get_kinds_id2op(IN id int)
         where p.`id` = id;
     end//
 
---  
+-- 
 --  Procedure: get_categories
---  
+-- 
 drop procedure if exists get_categories//
 create procedure get_categories()
     reads sql data
@@ -386,9 +386,9 @@ create procedure get_categories()
         order by c.`category_op`;
     end//
 
---  
+-- 
 --  Procedure: get_packages
---  
+-- 
 drop procedure if exists get_packages//
 create procedure get_packages()
     reads sql data
@@ -399,9 +399,9 @@ create procedure get_packages()
         order by p.`package_op`;
     end//
 
---  
+-- 
 --  Procedure: get_weightclasses
---  
+-- 
 drop procedure if exists get_weightclasses//
 create procedure get_weightclasses()
     reads sql data
@@ -412,9 +412,9 @@ create procedure get_weightclasses()
         order by w.`weightclass_op`;
     end//
 
---  
+-- 
 --  Procedure: get_transports
---  
+-- 
 drop procedure if exists get_transports//
 create procedure get_transports()
     reads sql data
@@ -432,7 +432,7 @@ delimiter ;
 --  ---------------------------------------------------------
 
 -- 
---  Data: operator 
+--  Data: operator
 -- 
 insert into `operator` (`username`, `password`, `address`, `phone`, `isadmin`, `description`) values
     ('okertanov', MD5('fmQAZ'),     'Riga, Latvia, LV-1012',                    '+37125864676', true,  'The developer of the system.'),
@@ -460,117 +460,117 @@ insert into `operator` (`username`, `password`, `address`, `phone`, `isadmin`, `
     ('DS2',       MD5('fmDS2'),     'Centralaja dzelzcela stacija, tunelis B',  '+37167073034', false, 'Dzelzcela stacija Operator 2');
 
 -- 
---  Data: place 
+--  Data: place
 -- 
-insert into `place` (`place_op`, `name`, `city`, `country`, `geo`, `description`) values 
-    (1,   'Austria',     '',         'Austria', '', ''), 
-    (2,   'Belgium',     '',         'Belgium', '', ''), 
-    (3,   'Bulgaria',    '',         'Bulgaria', '', ''), 
-    (4,   'Denmark',     '',         'Denmark', '', ''), 
-    (5,   'Finland',     '',         'Finland', '', ''), 
-    (6,   'Lithuania',   '',         'Lithuania', '', ''), 
-    (7,   'Lithuania, Vilnius',      'Vilnius',  'Lithuania', '', ''), 
-    (8,   'Estonia',     '',         'Estonia', '', ''), 
-    (9,   'Estonia, Tallinn',        'Tallinn',  'Estonia', '', ''), 
-    (10,  'France',      '',         'France', '', ''), 
-    (11,  'Germany',     '',         'Germany', '', ''), 
-    (12,  'Greece',      '',         'Greece', '', ''), 
-    (13,  'Hungary',     '',         'Hungary', '', ''), 
-    (14,  'Ireland',     '',         'Ireland', '', ''), 
-    (15,  'Italy',       '',         'Italy', '', ''), 
-    (16,  'Liechtenstein', '',       'Liechtenstein', '', ''), 
-    (17,  'Luxembourg',  '',         'Luxembourg', '', ''), 
-    (18,  'Macedonia',   '',         'Macedonia', '', ''), 
-    (19,  'Monaco',      '',         'Monaco', '', ''), 
-    (20,  'Netherlands', '',         'Netherlands', '', ''), 
-    (21,  'Norway',      '',         'Norway', '', ''), 
-    (22,  'Portugal',    '',         'Portugal', '', ''), 
-    (23,  'Romania',     '',         'Romania', '', ''), 
-    (24,  'San Marino',  '',         'San Marino', '', ''), 
-    (25,  'Andorra',     '',         'Andorra', '', ''), 
-    (26,  'Serbia',      '',         'Serbia', '', ''), 
-    (27,  'Slovakia',    '',         'Slovakia', '', ''), 
-    (28,  'Slovenia',    '',         'Slovenia', '', ''), 
-    (29,  'Croatia',     '',         'Croatia', '', ''), 
-    (30,  'Bosnia & Herzegovina', '', 'Bosnia & Herzegovina', '', ''), 
-    (31,  'Czech Republic', '',      'Czech Republic', '', ''), 
-    (32,  'Spain',       '',         'Spain', '', ''), 
-    (33,  'Sweden',      '',         'Sweden', '', ''), 
-    (34,  'Switzerland', '',         'Switzerland', '', ''), 
-    (35,  'Russia',      '',         'Russia', '', ''), 
-    (36,  'Russia, Moscow',          'Moscow',   'Russia', '55.751667,37.617778', 'GMT+3, 845 km from Riga.'), 
-    (37,  'Russia, Saint Petersburg', 'Saint Petersburg', 'Russia', '59.95,30.316667', 'GMT+3, 500 km from Riga.'), 
-    (38,  'Ukraine',     '',         'Ukraine', '', ''), 
-    (39,  'Ukraine, Kiev',           'Kiev',     'Ukraine', '', ''), 
-    (40,  'Belarus',     '',         'Belarus', '', ''), 
-    (41,  'Belarus, Minsk',          'Minsk',    'Belarus', '', ''), 
-    (42,  'United Kingdom', '',      'United Kingdom', '', ''), 
-    (43,  'Kazakhstan',  '',         'Kazakhstan', '', ''), 
-    (44,  'Kazakhstan, Almaty',      'Almaty',   'Kazakhstan', '', ''), 
-    (45,  'Uzbekistan, Tashkent',    'Tashkent', 'Uzbekistan', '', ''), 
-    (46,  'Kyrgyzstan, Bishkek',     'Bishkek',  'Kyrgyzstan', '', ''), 
-    (47,  'Tajikistan, Dushanbe',    'Dushanbe', 'Tajikistan', '', ''), 
-    (48,  'Turkmenistan, Ashgabat',  'Ashgabat', 'Turkmenistan', '', ''), 
-    (99,  'Citads',      'Other',    'Nowhere', '00.0000,00.0000', 
+insert into `place` (`place_op`, `name`, `city`, `country`, `geo`, `description`) values
+    (1,   'Austria',     '',         'Austria', '', ''),
+    (2,   'Belgium',     '',         'Belgium', '', ''),
+    (3,   'Bulgaria',    '',         'Bulgaria', '', ''),
+    (4,   'Denmark',     '',         'Denmark', '', ''),
+    (5,   'Finland',     '',         'Finland', '', ''),
+    (6,   'Lithuania',   '',         'Lithuania', '', ''),
+    (7,   'Lithuania, Vilnius',      'Vilnius',  'Lithuania', '', ''),
+    (8,   'Estonia',     '',         'Estonia', '', ''),
+    (9,   'Estonia, Tallinn',        'Tallinn',  'Estonia', '', ''),
+    (10,  'France',      '',         'France', '', ''),
+    (11,  'Germany',     '',         'Germany', '', ''),
+    (12,  'Greece',      '',         'Greece', '', ''),
+    (13,  'Hungary',     '',         'Hungary', '', ''),
+    (14,  'Ireland',     '',         'Ireland', '', ''),
+    (15,  'Italy',       '',         'Italy', '', ''),
+    (16,  'Liechtenstein', '',       'Liechtenstein', '', ''),
+    (17,  'Luxembourg',  '',         'Luxembourg', '', ''),
+    (18,  'Macedonia',   '',         'Macedonia', '', ''),
+    (19,  'Monaco',      '',         'Monaco', '', ''),
+    (20,  'Netherlands', '',         'Netherlands', '', ''),
+    (21,  'Norway',      '',         'Norway', '', ''),
+    (22,  'Portugal',    '',         'Portugal', '', ''),
+    (23,  'Romania',     '',         'Romania', '', ''),
+    (24,  'San Marino',  '',         'San Marino', '', ''),
+    (25,  'Andorra',     '',         'Andorra', '', ''),
+    (26,  'Serbia',      '',         'Serbia', '', ''),
+    (27,  'Slovakia',    '',         'Slovakia', '', ''),
+    (28,  'Slovenia',    '',         'Slovenia', '', ''),
+    (29,  'Croatia',     '',         'Croatia', '', ''),
+    (30,  'Bosnia & Herzegovina', '', 'Bosnia & Herzegovina', '', ''),
+    (31,  'Czech Republic', '',      'Czech Republic', '', ''),
+    (32,  'Spain',       '',         'Spain', '', ''),
+    (33,  'Sweden',      '',         'Sweden', '', ''),
+    (34,  'Switzerland', '',         'Switzerland', '', ''),
+    (35,  'Russia',      '',         'Russia', '', ''),
+    (36,  'Russia, Moscow',          'Moscow',   'Russia', '55.751667,37.617778', 'GMT+3, 845 km from Riga.'),
+    (37,  'Russia, Saint Petersburg', 'Saint Petersburg', 'Russia', '59.95,30.316667', 'GMT+3, 500 km from Riga.'),
+    (38,  'Ukraine',     '',         'Ukraine', '', ''),
+    (39,  'Ukraine, Kiev',           'Kiev',     'Ukraine', '', ''),
+    (40,  'Belarus',     '',         'Belarus', '', ''),
+    (41,  'Belarus, Minsk',          'Minsk',    'Belarus', '', ''),
+    (42,  'United Kingdom', '',      'United Kingdom', '', ''),
+    (43,  'Kazakhstan',  '',         'Kazakhstan', '', ''),
+    (44,  'Kazakhstan, Almaty',      'Almaty',   'Kazakhstan', '', ''),
+    (45,  'Uzbekistan, Tashkent',    'Tashkent', 'Uzbekistan', '', ''),
+    (46,  'Kyrgyzstan, Bishkek',     'Bishkek',  'Kyrgyzstan', '', ''),
+    (47,  'Tajikistan, Dushanbe',    'Dushanbe', 'Tajikistan', '', ''),
+    (48,  'Turkmenistan, Ashgabat',  'Ashgabat', 'Turkmenistan', '', ''),
+    (99,  'Citads',      'Other',    'Nowhere', '00.0000,00.0000',
                                      'Unknown or special place to deliver a package.');
 
 -- 
---  Data: kind 
+--  Data: kind
 -- 
-insert into `kind` (`kind_op`, `name`, `description`) values 
+insert into `kind` (`kind_op`, `name`, `description`) values
     (1,     'Документы',            'Вид отправления: Документы (+0 к базовому тарифу)'),
     (2,     'Личные документы',     'Вид отправления: Личные документы (+10 к базовому тарифу)'),
     (3,     'Товар',                'Вид отправления: Товар (+10 lvl к базовому тарифу)');
 
 -- 
---  Data: category 
+--  Data: category
 -- 
-insert into `category` (`category_op`, `name`, `description`) values 
+insert into `category` (`category_op`, `name`, `description`) values
     (1,     'Biznesa klase',        '(+0 к базовому тарифу)'),
     (2,     'OFF TIME',             '(*2 к базовому тарифу)'),
     (3,     'Stingri uz rokas',     '(*2 к базовому тарифу)'),
     (4,     'Ekspress',             '(*2 к базовому тарифу)');
 
 -- 
---  Data: package 
+--  Data: package
 -- 
-insert into `package` (`package_op`, `name`, `description`) values 
+insert into `package` (`package_op`, `name`, `description`) values
     (1,     'Письмо',               '(до 270 х 350 мм и  0,3 кг максимум)'),
-    (2,     'Пакет',                '(до 370 х 410 мм и 5 кг максимум)'), 
+    (2,     'Пакет',                '(до 370 х 410 мм и 5 кг максимум)'),
     (3,     'Посылка',              '(до 750 х 550 x 500 мм и 31.5 кг максимум)');
 
 -- 
---  Data: weightclass 
+--  Data: weightclass
 -- 
-insert into `weightclass` (`weightclass_op`, `name`, `description`) values 
+insert into `weightclass` (`weightclass_op`, `name`, `description`) values
     (1,     'Lidz 200 g',           ''),
-    (2,     '0,200 g - 0,500 g',    ''), 
-    (3,     '0,501 g - 1 kg',       ''), 
-    (4,     '1 kg - 1,5 kg',        ''), 
-    (5,     '1,501 kg - 2 kg',      ''), 
+    (2,     '0,200 g - 0,500 g',    ''),
+    (3,     '0,501 g - 1 kg',       ''),
+    (4,     '1 kg - 1,5 kg',        ''),
+    (5,     '1,501 kg - 2 kg',      ''),
     (6,     'Vairak 2 kg',          '');
 
 -- 
 --  Data: transport
 -- 
-insert into `transport` (`transport_op`, `name`, `description`) values 
+insert into `transport` (`transport_op`, `name`, `description`) values
     (1,     'Auto',                 ''),
     (2,     'Avia',                 '');
 
 -- 
 --  TODO: Data: tariff
 -- 
-insert into `tariff` (`tariff_op`, `place_id`, `transport_id`, `delivery_days`, 
-                      `wr01`, `wr02`, `wr03`, `wr04`, `wr05`, `wr06`, `wr07`, `wr08`, `wr09`, `wr10`, `wr11`, `wo05`, 
-                      `wr21`, `wr22`, `wr23`, `wr24`, `wr25`, `wr26`, `wr27`, `wr28`, `wr29`, `wr30`, `wr31`, `wr32`, `wr33`, `wo10`) values 
+insert into `tariff` (`tariff_op`, `place_id`, `transport_id`, `delivery_days`,
+                      `wr01`, `wr02`, `wr03`, `wr04`, `wr05`, `wr06`, `wr07`, `wr08`, `wr09`, `wr10`, `wr11`, `wo05`,
+                      `wr21`, `wr22`, `wr23`, `wr24`, `wr25`, `wr26`, `wr27`, `wr28`, `wr29`, `wr30`, `wr31`, `wr32`, `wr33`, `wo10`) values
     (
         1, 1, 1, '',
-        00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 
+        00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00,
         00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00
     ),
     (
         2, 1, 1, '',
-        00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 
+        00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00,
         00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00, 00.00
     );
 
@@ -583,7 +583,7 @@ insert into `tariff` (`tariff_op`, `place_id`, `transport_id`, `delivery_days`,
 -- 
 
 -- 
---  DONE: Rename xyz_id to _op(means option number) for the catalogs, 
+--  DONE: Rename xyz_id to _op(means option number) for the catalogs,
 --        because zyz_id whould refer to the one-to-one/many relation.
 --        NOW _id is the refernece, _op is the frontend's option.
 -- 

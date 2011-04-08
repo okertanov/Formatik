@@ -13,9 +13,9 @@ const WEBROOT       = path.join(path.dirname(__filename), '/');
 const WEBPORT       = 8800;
 const INDEXHTML     = 'index.html';
 
-http.createServer(function(request, response) 
+http.createServer(function(request, response)
 {
-    try 
+    try
     {
         serve_request(request, response);
     }
@@ -35,15 +35,15 @@ function serve_request(request, response)
     //The top-level router
     if (/^\/{1}(api)\/?(.*)$/i.test(serve_path)) // "/api", "/api/send/etc"
     {
-        serve_request_api(request, response); 
+        serve_request_api(request, response);
     }
     else if (/^\/?$/.test(serve_path)) // "/"
     {
-        serve_request_fsobject(INDEXHTML, response); 
+        serve_request_fsobject(INDEXHTML, response);
     }
     else if (/^\/{1}(.*(?!api))$/i.test(serve_path)) // "/resource.mime"
     {
-        serve_request_fsobject(request, response); 
+        serve_request_fsobject(request, response);
     }
     else
     {
@@ -57,9 +57,9 @@ function serve_request_fsobject(request, response)
     var filename = path.join(WEBROOT, url_obj);
     var file_mime = get_mime_for(filename);
 
-    path.exists(filename, function(exists) 
+    path.exists(filename, function(exists)
     {
-        if(!exists) 
+        if(!exists)
         {
             return response_http_code(request, response, 404);
         }
@@ -69,9 +69,9 @@ function serve_request_fsobject(request, response)
             return response_http_code(request, response, 403);
         }
 
-        fs.readFile(filename, "binary", function(err, file) 
+        fs.readFile(filename, "binary", function(err, file)
         {
-            if(err) 
+            if(err)
             {
                 return response_http_code(request, response, 500);
             }
@@ -128,13 +128,13 @@ function serve_request_api(request, response)
     }
 }
 
-var HTTPMimeTypes = 
+var HTTPMimeTypes =
 {
     'text': 'text/plain',
     'html': 'text/html',
     'css' : 'text/css',
-    'js'  : 'application/javascript', 
-    'ico' : 'image/x-icon', 
+    'js'  : 'application/javascript',
+    'ico' : 'image/x-icon',
     'json': 'application/json',
     '---' : '_disabled'
 };
@@ -169,13 +169,13 @@ function get_mime_for(filename)
     return mime;
 }
 
-var HTTPErrorStrings = 
+var HTTPErrorStrings =
 {
     200: 'OK',
     401: 'Unauthorized',
-    403: 'Forbidden', 
-    404: 'Not Found', 
-    500: 'Internal Server Error', 
+    403: 'Forbidden',
+    404: 'Not Found',
+    500: 'Internal Server Error',
     501: 'Not Implemented'
 };
 
@@ -190,13 +190,13 @@ function response_http_code(request, response, errcode)
 
 function dump_js_object(obj)
 {
-    var str_out = ""; 
-    for (var prop in obj) 
-    {   
-        str_out += "\tproperty: "+ prop + " value: ["+ obj[prop]+ "]\n"; 
-    } 
-    
-    str_out += "toString(): " + " value: [" + obj.toString() + "]"; 
+    var str_out = "";
+    for (var prop in obj)
+    {
+        str_out += "\tproperty: "+ prop + " value: ["+ obj[prop]+ "]\n";
+    }
+
+    str_out += "toString(): " + " value: [" + obj.toString() + "]";
     sys.puts('JS Object details for:\n ' + obj + "\n" + str_out);
 }
 

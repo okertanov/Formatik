@@ -3,7 +3,7 @@ Belgium
 Bulgaria
 Denmark
 Finland
-Lithuania 
+Lithuania
 Lithuania, Vilnius
 Estonia
 Estonia, Tallinn
@@ -45,4 +45,4 @@ Kazakhstan, Almaty
 Uzbekistan, Tashkent
 Kyrgyzstan, Bishkek
 Tajikistan, Dushanbe
-Turkmenistan, Ashgabat 
+Turkmenistan, Ashgabat

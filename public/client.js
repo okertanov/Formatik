@@ -16,23 +16,23 @@ Ext.setup(
     }
 });
 
-Ext.regModel('Order', 
+Ext.regModel('Order',
 {
-    fields: [   
-                'id', 'username', 'direction', 'kind', 'category', 'package', 
+    fields: [
+                'id', 'username', 'direction', 'kind', 'category', 'package',
                 'weightclass', 'weight', 'transport', 'numplaces', 'cost'
             ]
 });
 
-Ext.regModel('Registration', 
+Ext.regModel('Registration',
 {
-    fields: [   
+    fields: [
                 'waybill', 'datetimereceived', 'datetimestamp', 'description'
             ]
 });
 
 
-Formatik.views.Tasks = Ext.extend(Ext.List, 
+Formatik.views.Tasks = Ext.extend(Ext.List,
 {
     id: 'tasks_list',
     title: 'Заказы',
@@ -44,18 +44,18 @@ Formatik.views.Tasks = Ext.extend(Ext.List,
     grouped: true,
     groups: 'datetimereceived',
     html: 'Загружается...',
-    itemTpl : '<tpl for="."><div class="tasks-list-item" id="{id}"><h4 class="datetimereceived">{datetimereceived}</h4><h3 class="direction">{direction}</h3></div></tpl>', 
-    
-    initComponent: function() 
+    itemTpl : '<tpl for="."><div class="tasks-list-item" id="{id}"><h4 class="datetimereceived">{datetimereceived}</h4><h3 class="direction">{direction}</h3></div></tpl>',
+
+    initComponent: function()
     {
         this.store = new Ext.data.Store(
         {
             model: 'Order',
-            getGroupString: function(record) 
+            getGroupString: function(record)
             {
                 return record.get('datetimereceived');
             },
-            data: 
+            data:
             [
                 {id: '1', datetimereceived: '25 Jan 2010', direction: 'To Riga'},
                 {id: '1', datetimereceived: '25 Jan 2010', direction: 'To Kiev'},
@@ -63,18 +63,18 @@ Formatik.views.Tasks = Ext.extend(Ext.List,
                 {id: '2', datetimereceived: '24 Jan 2010', direction: 'To Moscow'},
             ]
         });
-        
+
         Formatik.views.Tasks.superclass.initComponent.call(this);
-    }  
+    }
 });
 
-Formatik.views.NewTask = Ext.extend(Ext.Panel, 
+Formatik.views.NewTask = Ext.extend(Ext.Panel,
 {
     title: 'Оформление заказа',
     iconCls: 'favorites',
     layoutConfig: { pack: 'top', align: 'middle' },
     fullscreen: true,
-    items: 
+    items:
     [{
         title: 'NewTask',
         xtype: 'form',
@@ -83,17 +83,17 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
         autoScroll: false,
         id: 'new_task_form',
         url: '/api/newtask',
-        items: 
+        items:
         [
             {
                 xtype: 'fieldset',
                 title: 'Введите соответствующую информацию',
                 instructions: 'Внимательно вводите информацию со слов заказчика.',
-                defaults: 
+                defaults:
                 {
                     labelWidth: '25%'
                 },
-                items: 
+                items:
                 [
                     {
                         xtype: 'selectfield',
@@ -143,11 +143,11 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                 xtype: 'fieldset',
                 title: 'Расчетная стоимость доставки',
                 instructions: 'Эту стоимость доставки должен одобрить клиент.',
-                defaults: 
+                defaults:
                 {
                     labelWidth: '25%'
                 },
-                items: 
+                items:
                 [
                     {
                         xtype: 'textfield',
@@ -166,11 +166,11 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                 xtype: 'fieldset',
                 title: 'Оформление заказа',
                 instructions: 'Введите информацию об оформленном заказе.',
-                defaults: 
+                defaults:
                 {
                     labelWidth: '25%'
                 },
-                items: 
+                items:
                 [
                     {
                         xtype: 'textfield',
@@ -195,14 +195,14 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
             {
                 layout: 'hbox',
                 defaults: {xtype: 'button', style: 'margin-right: .5em;'},
-                items: 
+                items:
                 [
                     {xtype: 'spacer'},
                     {
                         text: 'Оформить',
                         scope: this,
                         iconMask: true,
-                        iconCls: 'add', 
+                        iconCls: 'add',
                         ui: 'action',
                         handler: function()
                         {
@@ -215,15 +215,15 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
     }],
     initComponent: function() {
         Formatik.views.NewTask.superclass.initComponent.call(this);
-        
-        [{id:0,name:'places'}, {id:1,name:'kinds'}, {id:2,name:'categories'}, 
+
+        [{id:0,name:'places'}, {id:1,name:'kinds'}, {id:2,name:'categories'},
          {id:3,name:'packages'}, {id:4,name:'weightclasses'}, {id:5,name:'transport'}].
         forEach( function(el, idx, arr){
             Ext.Ajax.request({
                     url: '/api/catalog/' + el.name,
                     method: 'GET',
                     params : {  },
-                    success: function(result, request) 
+                    success: function(result, request)
                     {
                         var reply = Ext.util.JSON.decode(result.responseText);
                         if (reply.success)
@@ -246,7 +246,7 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
                         var reply = Ext.util.JSON.decode(result.responseText);
                         var err_str = reply.msg || result;
                         console.log(err_str);
-                    }        
+                    }
             });
         });
 
@@ -330,34 +330,34 @@ Formatik.views.NewTask = Ext.extend(Ext.Panel,
     }
 });
 
-Ext.regModel('Operator', 
+Ext.regModel('Operator',
 {
     fields: ['id', 'username', 'password', 'address', 'isadmin', 'description']
 });
 
-Formatik.views.Settings = Ext.extend(Ext.Panel, 
+Formatik.views.Settings = Ext.extend(Ext.Panel,
 {
     title: 'Настройки',
     iconCls: 'settings',
     fullscreen: true,
-    items: 
+    items:
     [{
         title: 'Auth',
         xtype: 'form',
         id: 'settings_form',
         url: '/api/auth',
         scroll: 'vertical',
-        items: 
+        items:
         [
             {
                 xtype: 'fieldset',
                 title: 'Информация о пункте приема заказов',
                 instructions: 'Пожалуйста, попросите куратора ввести информацию о вашем пункте приема заказов.',
-                defaults: 
+                defaults:
                 {
                     labelWidth: '25%'
                 },
-                items: 
+                items:
                 [
                     {
                         xtype: 'textfield',
@@ -388,11 +388,11 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                         disabledCls: 'x-field'
                     }
                 ]
-            }, 
+            },
             {
                 layout: 'hbox',
                 defaults: {xtype: 'button', style: 'margin-right: .5em;'},
-                items: 
+                items:
                 [
                     {xtype: 'spacer'},
                     {
@@ -400,7 +400,7 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                         scope: this,
                         iconMask: true,
                         iconCls: 'delete',
-                        ui: '', 
+                        ui: '',
                         handler: function()
                         {
                             var my_form = Ext.getCmp('settings_form');
@@ -414,12 +414,12 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                             ResetLocalAuthConfig();
                             uiReloadDocument();
                         }
-                    }, 
+                    },
                     {
                         text: 'Применить',
                         scope: this,
                         iconMask: true,
-                        iconCls: 'compose', 
+                        iconCls: 'compose',
                         ui: 'action',
                         handler: function()
                         {
@@ -430,13 +430,13 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                             my_form.load(my_form.operator);
 
                             //1. Post
-                            my_form.submit({ 
+                            my_form.submit({
                                             waitMsg: {message:'Submitting', cls : 'demos-loading'},
                                             //2. Wait for xhr reply on the auth request
                                             success: function(f, result) {
                                                 console.dir(result);
                                                 //3. Set Cookie
-                                                SetLocalAuthConfig(my_form.operator.data['username'], 
+                                                SetLocalAuthConfig(my_form.operator.data['username'],
                                                     my_form.operator.data['password']);
                                                 //4. Set address
                                                 my_form.operator.data['address'] = result.address || ''
@@ -479,7 +479,7 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                 url: '/api/auth',
                 method: 'POST',
                 params : { username: auth.username, password: auth.password },
-                success: function(result, request) 
+                success: function(result, request)
                 {
                     var reply = Ext.util.JSON.decode(result.responseText);
                     if (reply.success)
@@ -500,7 +500,7 @@ Formatik.views.Settings = Ext.extend(Ext.Panel,
                     my_form.updateRecord(my_form.operator);
                     my_form.operator.data['address'] = err_str || ''
                     my_form.load(my_form.operator);
-                }        
+                }
             });
         }
     }
@@ -510,23 +510,23 @@ Formatik.views.Help = Ext.extend(Ext.Panel, {
     title: 'Помощь',
     iconCls: 'info',
     fullscreen: true,
-    html: '<center>' + 
+    html: '<center>' +
                 '<h3 style="color:black;">' +
-                    '<br />"Pasta un kujeru serviss" centralais birojs<br /><br />' + 
+                    '<br />"Pasta un kujeru serviss" centralais birojs<br /><br />' +
                     'Adrese: Akademijas laukums, 1-141, Riga, Latvija LV 1050<br />' +
                     'Talrunis/fakss: <a>(+371) 67320148</a>, <a>(+371) 67509742</a><br />' +
                     'e-pasts: ' +
                         '<a href="mailto:pastamedia@gmail.com">pastamedia@gmail.com</a><br /><br />' +
                     '<a href="http://www.pks.lv/">www.pks.lv</a>' +
                 '</h3>' +
-                '<h4 style="color:black;">' + 
-                    '<br /><br /><hr width="70%"/><br /><br />Created by Oleg E Kertanov <a href="mailto:okertanov@gmail.com">&lt;okertanov@gmail.com&gt;</a> &nbsp;' + 
-                    '&copy; 2011 &nbsp;' + 
+                '<h4 style="color:black;">' +
+                    '<br /><br /><hr width="70%"/><br /><br />Created by Oleg E Kertanov <a href="mailto:okertanov@gmail.com">&lt;okertanov@gmail.com&gt;</a> &nbsp;' +
+                    '&copy; 2011 &nbsp;' +
                 '</h4>' +
           '</center>',
     initComponent: function() {
         Formatik.views.Help.superclass.initComponent.call(this);
-    }       
+    }
 });
 
 Formatik.App = Ext.extend(Ext.Panel, {
@@ -547,7 +547,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
             /*title: 'Оформление заказа',*/
             dock: 'top',
             items: [
-                {xtype: 'spacer'}, 
+                {xtype: 'spacer'},
                 {
                     id: 'username-select-field',
                     xtype: 'selectfield',
@@ -559,7 +559,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
                 }
             ]
         });
-        
+
         this.tabs = new Ext.TabPanel({
             tabBar: { dock: 'bottom', layout: { pack: 'center'} },
             ui: 'dark',
@@ -569,7 +569,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
 
         this.dockedItems = [this.toolbar];
         this.items = [this.tabs];
-        
+
         Formatik.App.superclass.initComponent.call(this);
 
         this.on({
@@ -590,7 +590,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
         this.baseUIOnAuthConfig( IsLocalAuthConfig(GetLocalAuthConfig()) );
         this.baseUIOnAuthUserPanel( GetLocalAuthConfig() );
   },
-    
+
   afterRender: function() {
       console.log('afterRender');
       Formatik.App.superclass.afterRender.apply(this, arguments);
@@ -602,33 +602,33 @@ Formatik.App = Ext.extend(Ext.Panel, {
 
   onLinkTap: function(e, t) {
       e.stopEvent();
-      this.backButton.hide();     
+      this.backButton.hide();
       this.setCard(this.tabs, Formatik.defaultAnim);
       this.tabs.setCard(this.maps, Formatik.defaultAnim);
       this.updateToolbarTitle(this.tabs.getActiveItem().title);
   },
 
   updateToolbarTitle: function(title) {
-            if (title) { this.toolbarTitle = title; } 
+            if (title) { this.toolbarTitle = title; }
             this.toolbar.setTitle(this.toolbarTitle || ' ');
   },
-    
+
   onTabChange: function(tabs, tab, card) {
       console.log('onTabChange');
       this.updateToolbarTitle(this.tabs.getActiveItem().title);
   },
-    
+
   onBeforeActivate: function() {
       console.log('onBeforeActivate');
   },
-    
+
   onBeforeDeactivate: function() {
       console.log('onBeforeDeactivate');
   },
 
     baseUIOnAuthConfig: function(act) {
         var isEnabled = !!act;
-        if(act)  
+        if(act)
         {
             this.newtask_tab.enable().setVisible(true);
             this.tasks_tab.enable().setVisible(true).setBadge();
@@ -645,7 +645,7 @@ Formatik.App = Ext.extend(Ext.Panel, {
     baseUIOnAuthUserPanel: function(auth) {
         if ( IsLocalAuthConfig(auth) )
         {
-            var username = auth.username;    
+            var username = auth.username;
             var select_obj = Ext.getCmp('username-select-field');
             select_obj.setOptions([{'value':1, 'text': username}]);
             select_obj.reset();
@@ -656,15 +656,15 @@ Formatik.App = Ext.extend(Ext.Panel, {
 
 
 /**************************************************/
-function CreateCookie(name,value,days) 
+function CreateCookie(name,value,days)
 {
-    if (days) 
+    if (days)
     {
         var date = new Date();
         date.setTime(date.getTime()+(days*24*60*60*1000));
         var expires = "; expires="+date.toGMTString();
     }
-    else 
+    else
     {
         var expires = "";
     }
@@ -673,23 +673,23 @@ function CreateCookie(name,value,days)
     document.cookie = cookStr;
 }
 
-function ReadCookie(name) 
+function ReadCookie(name)
 {
     var value = null;
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) 
+    for(var i=0;i < ca.length;i++)
     {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) 
+        if (c.indexOf(nameEQ) == 0)
             value = unescape(c.substring(nameEQ.length,c.length));
     }
 
     return value;
 }
 
-function DeleteCookie(name) 
+function DeleteCookie(name)
 {
     CreateCookie(name, "", -1);
 }
@@ -698,7 +698,7 @@ function DeleteCookie(name)
 /**************************************************/
 function SetLocalAuthConfig(username, password)
 {
-    CreateCookie('auth', username + ':' + password, 365); 
+    CreateCookie('auth', username + ':' + password, 365);
 }
 
 function ResetLocalAuthConfig()
@@ -720,7 +720,7 @@ function IsLocalAuthConfig(auth)
     return (auth.username.length && auth.password.length);
 }
 
-function uiReloadDocument() 
+function uiReloadDocument()
 {
     window.location.href = window.location.href;
 }

@@ -13,8 +13,8 @@ ini_set("display_errors", 1);
 // Globals
 //
 $ctx = array();
-$ctx['sqlhost']         = 'p:localhost'; 
-$ctx['sqldb']           = 'formatikdb'; 
+$ctx['sqlhost']         = 'p:localhost';
+$ctx['sqldb']           = 'formatikdb';
 $ctx['sqlusername']     = 'formatik';
 $ctx['sqlpassword']     = '9sTrTBBnnMO';
 
@@ -34,14 +34,14 @@ function check_auth()
         $auth_cookie = explode(':', isset($ck['auth']) ? $ck['auth'] : '');
         $rs['username'] = isset($auth_cookie[0]) ? $auth_cookie[0] : '';
         $rs['password'] = isset($auth_cookie[1]) ? $auth_cookie[1] : '';
-        
+
         if ( !strlen($rs['username']) or !strlen($rs['password']) )
             e_throw('Username or password couldn\'t be empty.');
 
         $sql_statement = sprintf('call check_auth("%s", "%s");', $rs['username'], $rs['password']);
-        $sql_result    = sql_execute($sql_statement) or 
+        $sql_result    = sql_execute($sql_statement) or
             e_throw( 'sql_execute error: ' . sql_get_error() );
-        $sql_data      = sql_get_data($sql_result) or 
+        $sql_data      = sql_get_data($sql_result) or
             e_throw( 'not authenticated' );
         sql_release_data($sql_result);
         if ( isset($sql_data['authenticated']) and $sql_data['authenticated'])
@@ -53,7 +53,7 @@ function check_auth()
     }
     catch(Exception $e)
     {
-        if ($sql_result) 
+        if ($sql_result)
             sql_release_data($sql_result);
         throw $e; //return false;
     }
@@ -84,7 +84,7 @@ function handle_auth()
     $rs['success']  = FALSE;
     $rs['msg']      = 'not authenticated';
     $sql_result = 0;
-    
+
     try
     {
         $rs['username'] = isset($rq['username']) ? $rq['username'] : '';
@@ -94,9 +94,9 @@ function handle_auth()
             e_throw('Username or password couldn\'t be empty.');
 
         $sql_statement = sprintf('call check_auth("%s", "%s");', $rs['username'], $rs['password']);
-        $sql_result    = sql_execute($sql_statement) or 
+        $sql_result    = sql_execute($sql_statement) or
             e_throw( 'sql_execute error: ' . sql_get_error() );
-        $sql_data      = sql_get_data($sql_result) or 
+        $sql_data      = sql_get_data($sql_result) or
             e_throw( 'not authenticated' );
         if ( isset($sql_data['authenticated']) and $sql_data['authenticated'])
         {
@@ -108,14 +108,14 @@ function handle_auth()
     }
     catch(Exception $e)
     {
-        if ($sql_result) 
+        if ($sql_result)
             sql_release_data($sql_result);
         $rs['success']  = FALSE;
         $rs['msg']      = 'Exception: ' . $e->getMessage();
     }
 
     return json_encode($ctx['rs']);
-}  
+}
 
 function handle_settings()
 {
@@ -142,7 +142,7 @@ function handle_catalog()
     $rs['success']  = FALSE;
     $rs['msg']      = 'empty';
     $sql_result = 0;
-    
+
     try
     {
         check_auth();
@@ -175,7 +175,7 @@ function handle_catalog()
         }
         if ( !strlen($sql_statement) )
             e_throw('Unknown catalog parameter.');
-        $sql_result    = sql_execute($sql_statement) or 
+        $sql_result    = sql_execute($sql_statement) or
             e_throw( 'sql_execute error: ' . sql_get_error() );
         while( $sql_data = sql_get_data($sql_result) )
         {
@@ -190,7 +190,7 @@ function handle_catalog()
     }
     catch(Exception $e)
     {
-        if ($sql_result) 
+        if ($sql_result)
             sql_release_data($sql_result);
         $rs['success']  = FALSE;
         $rs['msg']      = 'Exception: ' . $e->getMessage();
@@ -256,7 +256,7 @@ function handle_api()
             break;
     }
 
-    //Output 
+    //Output
     header('Content-type: application/json');
     echo $js_str;
 
@@ -320,9 +320,9 @@ function session_leave()
 function sql_connect()
 {
     global $ctx;
-    
-    $ctx['sqlconn'] = 
-        new mysqli($ctx['sqlhost'], $ctx['sqlusername'], $ctx['sqlpassword'], $ctx['sqldb']) 
+
+    $ctx['sqlconn'] =
+        new mysqli($ctx['sqlhost'], $ctx['sqlusername'], $ctx['sqlpassword'], $ctx['sqldb'])
             or die('MySQL Connection Error: ' . mysqli_connect_error());
 }
 
@@ -359,8 +359,8 @@ function sql_get_data($res)
 function sql_release_data($res)
 {
     global $ctx;
-    
-    while($ctx['sqlconn']->next_result()) 
+
+    while($ctx['sqlconn']->next_result())
         $ctx['sqlconn']->store_result();
     if ($res)
         $res->close();
