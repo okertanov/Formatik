@@ -16,7 +16,7 @@ $ctx = array();
 $ctx['sqlhost']         = 'p:localhost';
 $ctx['sqldb']           = 'formatikdb';
 $ctx['sqlusername']     = 'formatik';
-$ctx['sqlpassword']     = '9sTrTBBnnMO';
+$ctx['sqlpassword']     = 'PASSWORD';
 
 //
 // Authorization

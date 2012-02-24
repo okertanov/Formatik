@@ -30,7 +30,7 @@ grant usage on `formatikdb`.* to `formatik`@`localhost`;
 drop user `formatik`@`localhost`;
 
 create user `formatik`@`localhost`
-    identified by '9sTrTBBnnMO';
+    identified by 'PASSWORD';
 
 grant all privileges on `formatikdb`.* to `formatik`@`localhost`
     with grant option;
@@ -435,8 +435,7 @@ delimiter ;
 --  Data: operator
 -- 
 insert into `operator` (`username`, `password`, `address`, `phone`, `isadmin`, `description`) values
-    ('okertanov', MD5('fmQAZ'),     'Riga, Latvia, LV-1012',                    '+37125864676', true,  'The developer of the system.'),
-    ('nata',      MD5('fm1234567'), 'Riga, Latvia, LV-1012',                    '+37127700257', true,  'Main system operator.'),
+    ('admin',     MD5('fmADM'),     'Riga, Latvia',                             '+37127700257', true,  'Main system operator.'),
     ('PKS',       MD5('fmPKS'),     'Akademijas laukums 1, Riga',               '+37167320148', false, 'Admin Operator'),
     ('AL1',       MD5('fmAL1'),     'TC Alfa, Brivibas 372, Riga',              '+37167076480', false, 'TC Alfa Operator 1'),
     ('AL2',       MD5('fmAL2'),     'TC Alfa, Brivibas 372, Riga',              '+37167076480', false, 'TC Alfa Operator 2'),
